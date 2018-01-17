@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.biz.member.mapper.MemberMapper">
+
+	<!-- member insert  -->
+	<insert id="insertMember" parameterType="io.mithril.vo.member.Member" useGeneratedKeys="true"  keyProperty="idx">
+		INSERT INTO MEMBER
+		(
+			EMAIL
+			,PASSWORD
+			,STATE
+			,RATIO
+			,REGISTDATE
+			,MODIFYDATE
+		)
+		VALUES
+		(
+			#{email}
+			,#{password}
+			,#{state}
+			,#{ratio}
+			,NOW()
+			,NOW()
+		)
+	</insert>
+	<!-- member UPDATE  -->
+	<update id="updateMember" parameterType="io.mithril.vo.member.Member">
+		UPDATE MEMBER
+			SET	
+				MODIFYDATE = NOW()
+			 <if test="password !=null and password !=''">
+			 	, PASSWORD = #{password}
+			 </if>
+			 <if test="state !=null and state !=''">
+			 	, STATE = #{state}
+			 </if>
+			 <if test="ratio !=null and ratio !=''">
+			 	, RATIO = #{ratio}
+			 </if>
+		WHERE
+				IDX = #{idx}
+			AND	EMAIL = #{email}
+	</update>
+	<!-- member 검색 email 필수 값 -->
+	<select id="selectMember" parameterType="io.mithril.vo.member.Member" resultType="io.mithril.vo.member.Member">
+		SELECT 
+			IDX
+			,EMAIL
+			,PASSWORD
+			,STATE
+			,RATIO
+			,REGISTDATE
+			,MODIFYDATE
+		FROM MEMBER
+		WHERE
+			EMAIL = #{email}
+			<if test="idx != null and idx !=''">
+			AND	IDX = #{idx}
+			</if>
+			<if test="state != null and state !=''">
+			AND	STATE = #{STATE}
+			</if>			
+	</select>
+	<!-- memberDETAIL insert  MEMBER_IDX 값 필수-->
+	<insert id="insertMemberDetail" parameterType="io.mithril.vo.member.MemberDetail" useGeneratedKeys="true"  keyProperty="idx">
+		INSERT INTO MEMBERDETAIL
+			(
+				 MEMBER_IDX
+				,GENDER
+				,BIRTHYEAR
+				,BIRTHMONTH
+				,COUNTRY
+				,CITY
+				,REGISTDATE
+				,MODIFYDATE
+			)
+			VALUES
+			(
+				 #{member_idx}
+				,#{gender}
+				,#{birthyear}
+				,#{birthmonth}
+				,#{country}
+				,#{city}
+				,NOW()
+				,NOW()
+			)
+	</insert>
+	<!-- memberDETAIL insert  MEMBER_IDX 값 필수-->
+	<insert id="insertDevice" parameterType="io.mithril.vo.member.Device" useGeneratedKeys="true"  keyProperty="idx">
+		INSERT INTO DEVICE
+			(
+				 MEMBER_IDX
+				,DEVICEID
+				,MODEL
+				,BRAND
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{member_idx}
+				,#{deviceid}
+				,#{model}
+				,#{brand}
+				,NOW()
+			)
+	</insert>
+	<insert id="insertAccount" parameterType="io.mithril.vo.member.Account" useGeneratedKeys="true"  keyProperty="idx">
+		INSERT INTO ACCOUNT
+			(
+				MEMBER_IDX
+				,ALIAS
+				,PUBLICKEY
+				,TYPECODE
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{MEMBER_IDX}
+				,#{ALIAS}
+				,#{PUBLICKEY}
+				,#{TYPECODE}
+				,#{REGISTDATE}
+			)
+	</insert>
+	<update id="updateAccount" parameterType="io.mithril.vo.member.Account">
+		UPDATE ACCOUNT
+			SET
+			   ALIAS = #{alias}
+		WHERE
+			MEMBER_IDX = #{member_idx}
+	</update>
+	<update id="updateMemberdetail" parameterType="io.mithril.vo.member.MemberDetail">
+		UPDATE MEMBERDETAIL
+			SET
+				MODIFYDATE = NOW()
+				<if test="gender != null and gender !=''">
+				,GENDER = #{gender}
+				</if>
+				<if test="birthyear != null and birthyear !=''">
+				,BIRTHYEAR = #{birthyear}
+				</if>
+				<if test="birthmonth != null and birthmonth !=''">
+				,BIRTHMONTH = #{birthmonth}
+				</if>
+				<if test="country != null and country !=''">
+				,COUNTRY = #{country}
+				</if>
+				<if test="city != null and city !=''">
+				,CITY = #{city}
+				</if>
+		WHERE
+				MEMBER_IDX = #{member_idx}			
+	</update>
+	
+	
+</mapper>
