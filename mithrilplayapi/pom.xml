@@ -134,7 +134,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>io.mithrilcoin.api.CashchargeApiApplication</mainClass>
+					<mainClass>io.mithrilcoin.api.MithrilplayapiApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
