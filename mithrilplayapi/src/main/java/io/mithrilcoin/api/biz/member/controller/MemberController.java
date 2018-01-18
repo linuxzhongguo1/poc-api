@@ -4,6 +4,7 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -11,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.exception.MithrilPlayExceptionCode;
+import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberInfo;
+import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.member.service.MemberService;
 import io.mithrilcoin.api.exception.MithrilPlayException;
 
@@ -34,5 +37,28 @@ public class MemberController {
 		MemberInfo validMember = memberService.insertMember(member);
 
 		return validMember;
+	}
+
+	@PostMapping("/signin/{accessPoint}/{idx}")
+	public Member signin(@RequestBody @Valid Member member, @PathVariable String accessPoint, @PathVariable String idx,
+			BindingResult result) {
+		return memberService.signIn(member);
+	}
+
+	@GetMapping("/select/userInfo/{mberIdx}/{accessPoint}/{idx}")
+	public UserInfo selectUserinfo(@PathVariable String mberIdx, @PathVariable String accessPoint, @PathVariable String idx) {
+		return memberService.selectUserInfo(mberIdx);
+	}
+
+	@GetMapping("/select/{accessPoint}/{idx}")
+	public Member selectMember(MemberInfo member, @PathVariable String accessPoint, @PathVariable String idx,
+			BindingResult result) {
+
+		Member findmember = memberService.selectMember(member);
+		if (findmember != null) {
+			return findmember;
+		}
+		return null;
+
 	}
 }

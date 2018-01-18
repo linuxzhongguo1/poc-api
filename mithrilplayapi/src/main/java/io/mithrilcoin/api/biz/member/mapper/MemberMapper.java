@@ -35,4 +35,8 @@ public interface MemberMapper {
 
 	public int updateNewDevice(Device device);
 	
+	public ArrayList<Device> selectDevice(Device device);
+	
+	public MemberDetail selectMemberDetail(MemberDetail detail);
+	
 }

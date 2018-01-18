@@ -54,7 +54,7 @@
 		FROM MEMBER
 		WHERE
 			EMAIL = #{email}
-			<if test="idx != null and idx !=''">
+			<if test="idx gt 0">
 			AND	IDX = #{idx}
 			</if>
 			<if test="state != null and state !=''">
@@ -164,7 +164,68 @@
 				MEMBER_IDX = #{member_idx}			
 	</update>
 	
-	
+	<select id="selectDevice" parameterType="io.mithril.vo.member.Device" resultType="io.mithril.vo.member.Device">
+			SELECT 
+				IDX
+				,MEMBER_IDX
+				,DEVICEID
+				,MODEL
+				,BRAND
+				,USEYN
+				,REGISTDATE
+			FROM DEVICE
+			WHERE
+				MEMBER_IDX = #{member_idx}
+			<if test="deviceid != null and deviceid !=''">
+				AND DEVICEID = #{deviceid}
+			</if>
+			<if test="idx gt 0">
+				AND IDX = #{idx}
+			</if>
+			<if test="brand != null and brand !=''">
+				AND BRAND = #{brand}
+			</if>
+			<if test="model != null and model !=''">
+				AND MODEL = #{model}
+			</if>
+			<if test="useyn != null and useyn !=''">
+				AND USEYN = #{useyn}
+			</if>
+			ORDER BY REGISTDATE ASC
+	</select>
+	<select id="selectMemberDetail" parameterType="io.mithril.vo.member.MemberDetail" resultType="io.mithril.vo.member.MemberDetail">
+			SELECT 
+				IDX
+				,MEMBER_IDX
+				,GENDER
+				,BIRTHYEAR
+				,BIRTHMONTH
+				,COUNTRY
+				,CITY
+				,REGISTDATE
+				,MODIFYDATE
+			FROM MEMBERDETAIL
+			WHERE
+				MEMBER_IDX = #{member_idx}
+			<if test="gender != null and gender !=''">
+				AND GENDER = #{gender}
+			</if>
+			<if test="idx gt 0">
+				AND IDX = #{idx}
+			</if>
+			<if test="birthyear != null and birthyear !=''">
+				AND BIRTHYEAR = #{birthyear}
+			</if>
+			<if test="birthmonth != null and birthmonth !=''">
+				AND BIRTHMONTH = #{birthmonth}
+			</if>
+			<if test="country != null and country !=''">
+				AND COUNTRY = #{country}
+			</if>
+			<if test="city != null and city !=''">
+				AND CITY = #{city}
+			</if>			
+	</select>
 	
 	
 </mapper>
