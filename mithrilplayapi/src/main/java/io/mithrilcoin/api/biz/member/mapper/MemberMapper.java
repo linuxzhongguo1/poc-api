@@ -32,5 +32,7 @@ public interface MemberMapper {
 	public int updateAccount(Account account);
 	
 	public int updateMemberdetail(MemberDetail memberdetail);
+
+	public int updateNewDevice(Device device);
 	
 }

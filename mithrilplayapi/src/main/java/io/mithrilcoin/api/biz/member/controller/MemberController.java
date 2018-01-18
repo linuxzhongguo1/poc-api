@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.exception.MithrilPlayExceptionCode;
-import io.mithril.vo.member.SignupMember;
+import io.mithril.vo.member.MemberInfo;
 import io.mithrilcoin.api.biz.member.service.MemberService;
 import io.mithrilcoin.api.exception.MithrilPlayException;
 
@@ -22,8 +22,8 @@ public class MemberController {
 	@Autowired
 	private MemberService memberService;
 
-	@PostMapping("/signUp/{accessPoint}/{idx}")
-	public SignupMember memberSignUp(@RequestBody @Valid SignupMember member, @PathVariable String accessPoint,
+	@PostMapping("/signup/{accessPoint}/{idx}")
+	public MemberInfo memberSignUp(@RequestBody @Valid MemberInfo member, @PathVariable String accessPoint,
 			@PathVariable String idx, BindingResult result) throws MithrilPlayException {
 
 		// 필수값이 누락일 경우 예외처리
@@ -31,7 +31,7 @@ public class MemberController {
 			throw new MithrilPlayException(MithrilPlayExceptionCode.INVALID_PARAMETER);
 		}
 
-		SignupMember validMember = memberService.insertMember(member);
+		MemberInfo validMember = memberService.insertMember(member);
 
 		return validMember;
 	}
