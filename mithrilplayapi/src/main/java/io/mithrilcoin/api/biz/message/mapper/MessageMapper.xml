@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.biz.message.mapper.MessageMapper">
+	<insert id="insertMessage" parameterType="io.mithril.vo.message.Message" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO MESSAGE
+			(
+				TYPECODE
+				,STATE
+				,TITLE
+				,BODY
+				,SENDER
+				,RECEIVER
+				,REGISTDATE
+			)
+			VALUES
+			(
+				#{typecode}
+				,#{state}
+				,#{title}
+				,#{body}
+				,#{sender}
+				,#{receiver}
+				,NOW()
+			)
+	</insert>
+	<update id="updateMessage" parameterType="io.mithril.vo.message.Message">
+		UPDATE MESSAGE
+		SET 
+			STATE = #{state}
+		WHERE
+			IDX = #{idx}
+	</update>
+	<select id="selectMessage" parameterType="io.mithril.vo.message.Message" resultType="io.mithril.vo.message.Message">
+		SELECT 
+			IDX
+			,TYPECODE
+			,STATE
+			,BODY
+			,SENDER
+			,RECEIVER
+			,REGISTDATE
+		FROM MESSAGE
+		WHERE 1=1
+			<if test="idx gt 0">
+			AND	IDX = #{idx}
+			</if>
+			<if test="sender != null and sender != ''">
+			AND	SENDER = #{sender}
+			</if>
+			<if test="receiver != null and receiver != ''">
+			AND	RECEIVER = #{receiver}
+			</if>
+			<if test="state != null and state != ''">
+			AND	STATE = #{state}
+			</if>
+			ORDER BY REGISTDATE DESC
+	</select>
+</mapper>

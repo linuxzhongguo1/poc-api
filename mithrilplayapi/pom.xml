@@ -101,6 +101,12 @@
 			<artifactId>mithrilPlayVO</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+		
+		<!--  gmail  -->
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+		    <artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 	</dependencies>
 	 <profiles>
 		<profile>
