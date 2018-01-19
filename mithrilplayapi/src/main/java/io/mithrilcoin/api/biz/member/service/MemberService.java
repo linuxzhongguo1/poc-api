@@ -19,6 +19,7 @@ import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
 import io.mithrilcoin.api.common.security.HashingUtil;
 import io.mithrilcoin.api.exception.MithrilPlayException;
+import io.mithrilcoin.api.util.DateUtil;
 
 @Service
 public class MemberService {
@@ -30,6 +31,9 @@ public class MemberService {
 
 	@Autowired
 	private HashingUtil hashUtil;
+	
+	@Autowired
+	private DateUtil dateutil;
 
 	// 회원 가입
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
