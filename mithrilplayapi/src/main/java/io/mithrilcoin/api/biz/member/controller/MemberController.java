@@ -45,8 +45,15 @@ public class MemberController {
 		return memberService.signIn(member);
 	}
 
+	@PostMapping("/authorize/{accessPoint}/{idx}")
+	public Member authrizeMail(@RequestBody @Valid Member member, @PathVariable String accessPoint,
+			@PathVariable String idx, BindingResult result) {
+		return memberService.authorizeMember(member);
+	}
+
 	@GetMapping("/select/userInfo/{mberIdx}/{accessPoint}/{idx}")
-	public UserInfo selectUserinfo(@PathVariable String mberIdx, @PathVariable String accessPoint, @PathVariable String idx) {
+	public UserInfo selectUserinfo(@PathVariable String mberIdx, @PathVariable String accessPoint,
+			@PathVariable String idx) {
 		return memberService.selectUserInfo(mberIdx);
 	}
 

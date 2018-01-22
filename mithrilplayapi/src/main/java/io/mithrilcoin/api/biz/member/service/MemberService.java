@@ -31,7 +31,7 @@ public class MemberService {
 
 	@Autowired
 	private HashingUtil hashUtil;
-	
+
 	@Autowired
 	private DateUtil dateutil;
 
@@ -104,6 +104,24 @@ public class MemberService {
 			return findMember;
 		}
 		return null;
+	}
+
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public Member authorizeMember(Member member) {
+
+		ArrayList<Member> findMembers = memberMapper.selectMember(member);
+		if (findMembers.size() > 0) {
+			Member findMember = findMembers.get(0);
+
+			if ("M001001".equals(findMember.getState())) {
+				// 정상 인증회원으로 처리
+				findMember.setState("M001002");
+				memberMapper.updateMember(findMember);
+			}
+			return findMember;
+
+		}
+		return member;
 	}
 
 	public UserInfo selectUserInfo(String idx) {
