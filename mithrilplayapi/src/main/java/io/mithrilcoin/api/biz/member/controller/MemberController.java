@@ -46,8 +46,8 @@ public class MemberController {
 	}
 
 	@PostMapping("/authorize/{accessPoint}/{idx}")
-	public Member authrizeMail(@RequestBody @Valid Member member, @PathVariable String accessPoint,
-			@PathVariable String idx, BindingResult result) {
+	public Member authrizeMail(@RequestBody Member member, @PathVariable String accessPoint,
+			@PathVariable String idx) {
 		return memberService.authorizeMember(member);
 	}
 

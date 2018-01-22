@@ -117,9 +117,9 @@ public class MemberService {
 				// 정상 인증회원으로 처리
 				findMember.setState("M001002");
 				memberMapper.updateMember(findMember);
+				return findMember;
 			}
-			return findMember;
-
+			member.setState("");
 		}
 		return member;
 	}
