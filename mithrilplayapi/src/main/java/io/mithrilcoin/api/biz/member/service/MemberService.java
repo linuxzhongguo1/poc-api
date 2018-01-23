@@ -16,7 +16,10 @@ import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
 import io.mithril.vo.member.UserInfo;
+import io.mithril.vo.mtp.MtpHistory;
+import io.mithril.vo.mtp.MtpSource;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
+import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
 import io.mithrilcoin.api.common.security.HashingUtil;
 import io.mithrilcoin.api.exception.MithrilPlayException;
 import io.mithrilcoin.api.util.DateUtil;
@@ -28,6 +31,9 @@ public class MemberService {
 
 	@Autowired
 	private MemberMapper memberMapper;
+	
+	@Autowired
+	private MtpMapper mtpMapper;
 
 	@Autowired
 	private HashingUtil hashUtil;
@@ -142,6 +148,41 @@ public class MemberService {
 
 		return info;
 
+	}
+	
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public MemberDetail updateMemberDetail(MemberDetail memberdetail) {
+
+		MemberDetail findMemberdetail = memberMapper.selectMemberDetail(memberdetail);
+		if( findMemberdetail  != null)
+		{
+			memberMapper.updateMemberdetail(memberdetail);
+		}
+		else
+		{
+			memberMapper.insertMemberDetail(memberdetail);
+			Member member = new Member();
+			member.setIdx(memberdetail.getMember_idx());
+			member.setState("M001003");
+			memberMapper.updateMember(member);
+			//가입 보상 100포인트 지급 
+			MtpSource source = new MtpSource();
+			// 가입 보상 기준 
+			source.setTypecode("T003002");
+			ArrayList<MtpSource> sourceList = mtpMapper.selectMtpSource(source);
+			
+			source = sourceList.get(0);
+			
+			MtpHistory mtphistory = new MtpHistory();
+			mtphistory.setMember_idx(member.getIdx());
+			mtphistory.setAmount(source.getAmount());
+			mtphistory.setMtpsource_idx(source.getIdx());
+			mtphistory.setTypecode("T002001");
+			mtpMapper.insertMtp(mtphistory);
+			
+		}
+		findMemberdetail = memberMapper.selectMemberDetail(memberdetail);
+		return findMemberdetail;
 	}
 
 }

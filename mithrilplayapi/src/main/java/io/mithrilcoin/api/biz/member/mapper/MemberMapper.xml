@@ -39,7 +39,9 @@
 			 </if>
 		WHERE
 				IDX = #{idx}
-			AND	EMAIL = #{email}
+				<if test="email != null and email !=''">
+					AND	EMAIL = #{email}
+				</if>
 	</update>
 	<!-- member 검색 email 필수 값 -->
 	<select id="selectMember" parameterType="io.mithril.vo.member.Member" resultType="io.mithril.vo.member.Member">
@@ -207,7 +209,7 @@
 			FROM MEMBERDETAIL
 			WHERE
 				MEMBER_IDX = #{member_idx}
-			<if test="gender != null and gender !=''">
+			<!-- <if test="gender != null and gender !=''">
 				AND GENDER = #{gender}
 			</if>
 			<if test="idx gt 0">
@@ -224,7 +226,7 @@
 			</if>
 			<if test="city != null and city !=''">
 				AND CITY = #{city}
-			</if>			
+			</if>	 -->		
 	</select>
 	
 	

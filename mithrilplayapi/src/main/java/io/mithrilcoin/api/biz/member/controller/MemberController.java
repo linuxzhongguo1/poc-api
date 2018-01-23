@@ -1,5 +1,8 @@
 package io.mithrilcoin.api.biz.member.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.exception.MithrilPlayExceptionCode;
 import io.mithril.vo.member.Member;
+import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
 import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.member.service.MemberService;
@@ -60,12 +64,27 @@ public class MemberController {
 	@GetMapping("/select/{accessPoint}/{idx}")
 	public Member selectMember(MemberInfo member, @PathVariable String accessPoint, @PathVariable String idx,
 			BindingResult result) {
-
+		try {
+			String email = URLDecoder.decode( member.getEmail(), "UTF-8");
+			member.setEmail(email);
+			
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		Member findmember = memberService.selectMember(member);
 		if (findmember != null) {
 			return findmember;
 		}
 		return null;
 
+	}
+	
+	@PostMapping("/update/memberdetail/{accessPoint}/{idx}")
+	public MemberDetail updateMemberDetail(@RequestBody MemberDetail memberdetail, @PathVariable String accessPoint, @PathVariable String idx)
+	{
+		//memberService.updateMemberDetail(memberdetail);
+		return memberService.updateMemberDetail(memberdetail);
 	}
 }
