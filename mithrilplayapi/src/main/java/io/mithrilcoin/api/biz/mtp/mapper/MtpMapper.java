@@ -20,7 +20,7 @@ public interface MtpMapper {
 
 	public ArrayList<MtpHistory> selectMtpHistoryByMember(long memberIdx);
 
-	public long selectMtpTotalByMember(@Param("memberidx") long memberIdx, @Param("typecode") String typecode);
+	public MtpTotal selectMtpTotalByMember(@Param("member_idx") long memberIdx);
 	
 	public ArrayList<MtpSource> selectMtpSource(MtpSource source);
 }

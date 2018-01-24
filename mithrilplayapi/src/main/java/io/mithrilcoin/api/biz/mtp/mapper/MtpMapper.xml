@@ -95,13 +95,25 @@
 		WHERE 
 			MEMBER_IDX = #{memberidx}
 	</select>
-	<select id="selectMtpTotalByMember" parameterType="long" resultType="long">
-		SELECT 
+	<!--  쿼리 자체가 무겁다.. 풀스캔 .. 고쳐야 함 . -->
+	<select id="selectMtpTotalByMember" parameterType="long" resultType="io.mithril.vo.mtp.MtpTotal">
+		<!-- SELECT 
 			SUM(AMOUNT)		
 		FROM MTPHISTORY
 		WHERE
 			MEMBER_IDX = #{memberidx}
-		AND TYPECODE = #{typecode}
+		AND TYPECODE = #{typecode} -->
+		<![CDATA[
+			SELECT 
+				IFNULL(CASE WHEN TYPECODE = 'T002001' THEN SUM(AMOUNT) END,0)  AS incomeamount	
+				,IFNULL(CASE WHEN TYPECODE = 'T002002' THEN SUM(AMOUNT) END, 0) AS spentamount
+				,IFNULL(CASE WHEN EXPIREDATE != null AND EXPIREDATE > NOW() THEN SUM(AMOUNT) END,0) AS expireamount
+				,MEMBER_IDX
+			FROM MTPHISTORY
+			WHERE
+				MEMBER_IDX = #{member_idx}
+		]]>
+		
 	</select>
 	<select id="selectMtpSource" parameterType="io.mithril.vo.mtp.MtpSource" resultType="io.mithril.vo.mtp.MtpSource">
 		SELECT 

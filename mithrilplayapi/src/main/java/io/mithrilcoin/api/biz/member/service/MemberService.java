@@ -10,16 +10,12 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mithril.vo.exception.MithrilPlayExceptionCode;
-
 import io.mithril.vo.member.Device;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
 import io.mithril.vo.member.UserInfo;
-import io.mithril.vo.mtp.MtpHistory;
-import io.mithril.vo.mtp.MtpSource;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
-import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
 import io.mithrilcoin.api.biz.mtp.service.MtpService;
 import io.mithrilcoin.api.common.security.HashingUtil;
 import io.mithrilcoin.api.exception.MithrilPlayException;

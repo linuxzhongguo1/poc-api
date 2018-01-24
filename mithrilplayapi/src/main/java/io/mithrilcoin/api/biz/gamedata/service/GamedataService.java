@@ -3,7 +3,6 @@ package io.mithrilcoin.api.biz.gamedata.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -19,7 +18,6 @@ import io.mithril.vo.playdata.Playstoreappinfo;
 import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithrilcoin.api.biz.gamedata.mapper.GamedataMapper;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
-import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
 import io.mithrilcoin.api.biz.mtp.service.MtpService;
 import io.mithrilcoin.api.common.redis.RedisDataRepository;
 
