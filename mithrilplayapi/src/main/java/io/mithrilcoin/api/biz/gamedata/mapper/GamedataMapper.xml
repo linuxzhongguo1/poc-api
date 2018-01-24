@@ -27,6 +27,7 @@
 		WHERE 
 			MEMBER_IDX = #{member_idx}
 			AND DATE(REGISTDATE) = CURRENT_DATE()
+			ORDER BY REWARD DESC
 	</select>
 	<insert id="insertPlayData" parameterType="io.mithril.vo.playdata.PlayData" useGeneratedKeys="true" keyProperty="idx">
 		INSERT INTO PLAYDATA

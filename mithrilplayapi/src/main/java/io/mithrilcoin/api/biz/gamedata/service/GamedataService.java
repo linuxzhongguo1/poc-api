@@ -24,7 +24,7 @@ import io.mithrilcoin.api.common.redis.RedisDataRepository;
 @Service
 public class GamedataService {
 
-	private static final long VALID_PLAY_TIME = 600000;
+	private static final long VALID_PLAY_TIME = 60000;
 	@Autowired
 	private RedisDataRepository<String, Playstoreappinfo> playstoreRepo;
 
@@ -89,11 +89,15 @@ public class GamedataService {
 		Member meber = new Member();
 		meber.setEmail(email);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
+		ArrayList<TemporalPlayData> rewardedList = new ArrayList<>();
+		ArrayList<TemporalPlayData> newList = new ArrayList<>();
+		ArrayList<TemporalPlayData> exceptList = new ArrayList<>(); 
+		ArrayList<TemporalPlayData> noneList = new ArrayList<>(); 
 		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
 			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
-
+			
 			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
 				boolean findFlag = false;
@@ -104,28 +108,37 @@ public class GamedataService {
 						// 보상이 완료된 상태라면
 						if ("P001001".equals(data.getState())) {
 							gamdata.setValid("true");
+							exceptList.add(gamdata);
 						} else {
 							gamdata.setValid("false");
+							rewardedList.add(gamdata);
 						}
 						gamdata.setReward(data.getReward());
 						gamdata.setIdx(data.getIdx());
 						gamdata.setState(data.getState());
+						
 					}
 				}
 				if (!findFlag) {
 					if (gamdata.getPlaytime() >= VALID_PLAY_TIME) {
 						gamdata.setValid("true");
 						insertPlayData(gamdata, member_idx, email);
+						newList.add(gamdata);
 					} else {
 						gamdata.setValid("false");
+						noneList.add(gamdata);
 					}
+					
 				}
-
+				
 			}
+			rewardedList.addAll(exceptList);
+			rewardedList.addAll(newList);
+			rewardedList.addAll(noneList);
 		} else {
 			return null;
 		}
-		return gamePlaydatalist;
+		return rewardedList;
 	}
 
 	private TemporalPlayData insertPlayData(TemporalPlayData data, long member_idx, String email) {
