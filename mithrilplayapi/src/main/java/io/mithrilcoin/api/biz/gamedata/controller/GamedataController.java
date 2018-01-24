@@ -1,5 +1,7 @@
 package io.mithrilcoin.api.biz.gamedata.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.playdata.Playstoreappinfo;
+import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithrilcoin.api.biz.gamedata.service.GamedataService;
 
 @RestController
@@ -31,4 +34,13 @@ public class GamedataController {
 	{
 		return gamedataService.updatePlaystoreData(idx);
 	}
+	
+	@PostMapping("/insert/{email}/{accessPoint}/{idx}")
+	public ArrayList<TemporalPlayData> insertPlaydata(@RequestBody ArrayList<TemporalPlayData> dataList, @PathVariable String email
+			,@PathVariable String accessPoint, @PathVariable String idx) throws Exception
+	{
+		String userEmail = URLDecoder.decode(email,"UTF-8");
+		return gamedataService.insertPlayData(dataList, userEmail);	
+	}
+	
 }

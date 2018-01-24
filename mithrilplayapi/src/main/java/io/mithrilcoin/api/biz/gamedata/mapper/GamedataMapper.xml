@@ -13,4 +13,45 @@
 		]]>
 		
 	</select>
+	<select id="selectTodayPlayData" parameterType="long" resultType="io.mithril.vo.playdata.TemporalPlayData">
+		SELECT 
+			 IDX
+			,MEMBER_IDX
+			,PACKAGENAME
+			,STATE
+			,REWARD
+			,TXNUMBER
+			,TITLE
+			,REGISTDATE AS playdate
+		FROM PLAYDATA
+		WHERE 
+			MEMBER_IDX = #{member_idx}
+			AND DATE(REGISTDATE) = CURRENT_DATE()	
+	</select>
+	<insert id="insertPlayData" parameterType="io.mithril.vo.playdata.PlayData" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO PLAYDATA
+			(
+				 MEMBER_IDX
+				,PACKAGENAME
+				,TITLE
+				,TYPECODE
+				,PLAYTIME
+				,STATE
+				,MODIFY_MEMBER_ID
+				,REGISTDATE
+				,MODIFYDATE
+			)
+			VALUES
+			(
+				 #{member_idx}
+				,#{packagename}
+				,#{title}
+				,#{typecode}
+				,#{playtime}
+				,#{state}
+				,#{modify_member_id}
+				,NOW()
+				,NOW()
+			)
+	</insert>
 </mapper>

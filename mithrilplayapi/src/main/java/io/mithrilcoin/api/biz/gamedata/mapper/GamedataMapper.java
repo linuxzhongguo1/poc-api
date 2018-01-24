@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import io.mithril.vo.playdata.PlayData;
 import io.mithril.vo.playdata.Playstoreappinfo;
+import io.mithril.vo.playdata.TemporalPlayData;
 
 @Repository
 public interface GamedataMapper {
@@ -14,4 +16,8 @@ public interface GamedataMapper {
 
 	public ArrayList<Playstoreappinfo> selectMassPlaystoreappinfo(@Param("pagecount") int pagecount,
 			@Param("size") int size, @Param("startidx") int idx);
+	
+	public ArrayList<TemporalPlayData> selectTodayPlayData(@Param("member_idx") long mber_idx);
+	
+	public int insertPlayData(PlayData playdata);
 }
