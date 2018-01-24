@@ -13,11 +13,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mithril.vo.member.Member;
+import io.mithril.vo.mtp.MtpHistory;
 import io.mithril.vo.playdata.PlayData;
 import io.mithril.vo.playdata.Playstoreappinfo;
 import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithrilcoin.api.biz.gamedata.mapper.GamedataMapper;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
+import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
+import io.mithrilcoin.api.biz.mtp.service.MtpService;
 import io.mithrilcoin.api.common.redis.RedisDataRepository;
 
 @Service
@@ -32,6 +35,9 @@ public class GamedataService {
 
 	@Autowired
 	private MemberMapper memberMapper;
+	
+	@Autowired
+	private MtpService mtpService;
 
 	@PostConstruct
 	public void init() {
@@ -172,6 +178,59 @@ public class GamedataService {
 			}
 		}
 		return gamedatalist;
+	}
+	
+	
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public TemporalPlayData insertRewardData(TemporalPlayData playdata, String userEmail) {
+		
+		Member meber = new Member();
+		meber.setEmail(userEmail);
+		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
+		if (memberlist.size() > 0)
+		{
+			Member findmember = memberlist.get(0);
+			long member_idx = findmember.getIdx();
+			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
+			for( TemporalPlayData data : todayList )
+			{
+				// 패키지 이름 같고 idx도 같고 상태가 보상가능 상태여야만 보상을 쥐어줌 
+				if(data.getPackagename().equals(playdata.getPackagename()) && data.getIdx() == playdata.getIdx()
+						&& "P001001".equals(data.getState()))
+				{
+					// 리워드 주고 
+					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx());
+					updatePlayData(data, member_idx, userEmail, history);
+					playdata.setReward(history.getAmount());
+					playdata.setState("P001002");
+					
+				}
+				else
+				{
+					playdata.setState(data.getState());
+					playdata.setReward(data.getReward());
+				}
+				playdata.setValid("false");
+			}
+		}
+
+		return playdata;
+	}
+	
+	private void updatePlayData(TemporalPlayData playdata, long member_idx, String email, MtpHistory mtphistory)
+	{
+		PlayData mydata = new PlayData();
+		mydata.setIdx(playdata.getIdx());
+		mydata.setMember_idx(member_idx);
+		mydata.setModify_member_id(email);
+		mydata.setPlaytime(playdata.getPlaytime());
+		mydata.setMtp_idx(mtphistory.getIdx());
+		mydata.setReward(mtphistory.getAmount());
+		// 보상완료
+		mydata.setState("P001002");
+		
+		gamedatamapper.updatePlaydata(mydata);
+		
 	}
 	
 	

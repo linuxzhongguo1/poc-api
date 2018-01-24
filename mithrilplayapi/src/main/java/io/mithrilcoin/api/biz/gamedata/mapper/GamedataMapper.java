@@ -20,4 +20,6 @@ public interface GamedataMapper {
 	public ArrayList<TemporalPlayData> selectTodayPlayData(@Param("member_idx") long mber_idx);
 	
 	public int insertPlayData(PlayData playdata);
+
+	public int updatePlaydata(PlayData playdata);
 }

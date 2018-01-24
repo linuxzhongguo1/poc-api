@@ -26,7 +26,7 @@
 		FROM PLAYDATA
 		WHERE 
 			MEMBER_IDX = #{member_idx}
-			AND DATE(REGISTDATE) = CURRENT_DATE()	
+			AND DATE(REGISTDATE) = CURRENT_DATE()
 	</select>
 	<insert id="insertPlayData" parameterType="io.mithril.vo.playdata.PlayData" useGeneratedKeys="true" keyProperty="idx">
 		INSERT INTO PLAYDATA
@@ -54,4 +54,27 @@
 				,NOW()
 			)
 	</insert>
+	<update id="updatePlaydata" parameterType="io.mithril.vo.playdata.PlayData">
+		UPDATE PLAYDATA
+			SET 
+				MODIFYDATE = NOW()
+				<if test="state != null and state !=''">
+				,STATE = #{state}
+				</if>
+				<if test="modify_member_id != null and modify_member_id !=''">
+				,MODIFY_MEMBER_ID = #{modify_member_id}
+				</if>
+				<if test="reward != null and reward gt 0">
+				,REWARD = #{reward}
+				</if>
+				<if test="mtp_idx != null and mtp_idx gt 0">
+				,MTP_IDX = #{mtp_idx}
+				</if>
+				<if test="playtime != null and playtime gt 0">
+				,PLAYTIME = #{playtime}
+				</if>
+		WHERE
+			IDX = #{idx}
+		AND	MEMBER_IDX = #{member_idx}
+	</update>
 </mapper>

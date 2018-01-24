@@ -42,5 +42,14 @@ public class GamedataController {
 		String userEmail = URLDecoder.decode(email,"UTF-8");
 		return gamedataService.insertPlayData(dataList, userEmail);	
 	}
+	@PostMapping("/insert/reward/{email}/{accessPoint}/{idx}")
+	public TemporalPlayData insertPlaydataReward(@RequestBody TemporalPlayData playdata, @PathVariable String email
+			,@PathVariable String accessPoint, @PathVariable String idx) throws Exception
+	{
+		String userEmail = URLDecoder.decode(email,"UTF-8");
+		return gamedataService.insertRewardData(playdata, userEmail);
+
+	}
+	
 	
 }
