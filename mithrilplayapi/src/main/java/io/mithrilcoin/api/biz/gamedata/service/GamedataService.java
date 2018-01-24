@@ -26,14 +26,14 @@ public class GamedataService {
 	@PostConstruct
 	public void init()
 	{
-		updatePlaystoreData();
+		updatePlaystoreData(0);
 	}
 
-	public long updatePlaystoreData() {
+	public long updatePlaystoreData(int idx) {
 		int pagecount = 0;
 		int size = 10000;
 		long lastIndex = 0;
-		ArrayList<Playstoreappinfo> list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size);
+		ArrayList<Playstoreappinfo> list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size, idx);
 		
 		while(list.size() > 0)
 		{
@@ -46,7 +46,7 @@ public class GamedataService {
 				}
 			}
 			pagecount = pagecount + size;
-			list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size);
+			list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size, idx);
 		}
 		return lastIndex;
 	}

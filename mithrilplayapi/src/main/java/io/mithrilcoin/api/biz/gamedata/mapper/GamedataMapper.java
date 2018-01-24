@@ -11,6 +11,7 @@ import io.mithril.vo.playdata.Playstoreappinfo;
 public interface GamedataMapper {
 
 	public ArrayList<Playstoreappinfo> selectPlaystoreappinfo(Playstoreappinfo storeInfo);
-	
-	public ArrayList<Playstoreappinfo> selectMassPlaystoreappinfo(@Param("pagecount") int pagecount, @Param("size") int size);
+
+	public ArrayList<Playstoreappinfo> selectMassPlaystoreappinfo(@Param("pagecount") int pagecount,
+			@Param("size") int size, @Param("startidx") int idx);
 }
