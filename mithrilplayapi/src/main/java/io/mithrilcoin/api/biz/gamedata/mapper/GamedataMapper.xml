@@ -77,4 +77,18 @@
 			IDX = #{idx}
 		AND	MEMBER_IDX = #{member_idx}
 	</update>
+	
+	<select id="selectTotalPlaydataNopage" parameterType="long" resultType="io.mithril.vo.playdata.PlayData">
+			SELECT
+				 PACKAGENAME
+				 ,REWARD
+				 ,TITLE
+				 ,STATE
+				 ,PLAYTIME
+				 ,REGISTDATE
+		 	FROM PLAYDATA
+			WHERE 
+				STATE = 'P001002'
+			AND MEMBER_IDX = #{member_idx}
+	</select>
 </mapper>

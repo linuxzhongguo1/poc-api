@@ -22,4 +22,6 @@ public interface GamedataMapper {
 	public int insertPlayData(PlayData playdata);
 
 	public int updatePlaydata(PlayData playdata);
+
+	public ArrayList<PlayData> selectTotalPlaydataNopage(@Param("member_idx") long member_idx);
 }

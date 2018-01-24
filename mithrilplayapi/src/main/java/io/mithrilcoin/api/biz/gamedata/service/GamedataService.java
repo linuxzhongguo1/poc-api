@@ -24,7 +24,7 @@ import io.mithrilcoin.api.common.redis.RedisDataRepository;
 @Service
 public class GamedataService {
 
-	private static final long VALID_PLAY_TIME =  600000;
+	private static final long VALID_PLAY_TIME = 600000;
 	@Autowired
 	private RedisDataRepository<String, Playstoreappinfo> playstoreRepo;
 
@@ -33,7 +33,7 @@ public class GamedataService {
 
 	@Autowired
 	private MemberMapper memberMapper;
-	
+
 	@Autowired
 	private MtpService mtpService;
 
@@ -89,27 +89,22 @@ public class GamedataService {
 		Member meber = new Member();
 		meber.setEmail(email);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
-		if (memberlist.size() > 0)
-		{
+		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
 			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
-			
-			for(TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터 
+
+			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
 				boolean findFlag = false;
-				for(TemporalPlayData data : todayList) // 오늘 저장된 데이터
+				for (TemporalPlayData data : todayList) // 오늘 저장된 데이터
 				{
-					if(data.getPackagename().equals(gamdata.getPackagename()))
-					{
+					if (data.getPackagename().equals(gamdata.getPackagename())) {
 						findFlag = true;
 						// 보상이 완료된 상태라면
-						if("P001001".equals(data.getState()))
-						{
+						if ("P001001".equals(data.getState())) {
 							gamdata.setValid("true");
-						}
-						else
-						{
+						} else {
 							gamdata.setValid("false");
 						}
 						gamdata.setReward(data.getReward());
@@ -117,43 +112,37 @@ public class GamedataService {
 						gamdata.setState(data.getState());
 					}
 				}
-				if(!findFlag)
-				{	
-					if(gamdata.getPlaytime() >= VALID_PLAY_TIME)
-					{
+				if (!findFlag) {
+					if (gamdata.getPlaytime() >= VALID_PLAY_TIME) {
 						gamdata.setValid("true");
 						insertPlayData(gamdata, member_idx, email);
-					}
-					else
-					{
+					} else {
 						gamdata.setValid("false");
 					}
 				}
-				
+
 			}
-		}
-		else
-		{
+		} else {
 			return null;
 		}
 		return gamePlaydatalist;
 	}
-	private TemporalPlayData insertPlayData(TemporalPlayData data, long member_idx, String email)
-	{
+
+	private TemporalPlayData insertPlayData(TemporalPlayData data, long member_idx, String email) {
 		PlayData playdata = new PlayData();
 		playdata.setMember_idx(member_idx);
 		playdata.setModify_member_id(email);
 		playdata.setPackagename(data.getPackagename());
 		playdata.setTitle(data.getTitle());
 		playdata.setPlaytime(data.getPlaytime());
-		// 보상가능 
+		// 보상가능
 		playdata.setState("P001001");
-		// 플레이 시간 타입 현재는 이거밖에 없음. 
+		// 플레이 시간 타입 현재는 이거밖에 없음.
 		playdata.setTypecode("T004001");
 		gamedatamapper.insertPlayData(playdata);
 		data.setIdx(playdata.getIdx());
 		data.setState(playdata.getState());
-		
+
 		return data;
 	}
 
@@ -177,34 +166,28 @@ public class GamedataService {
 		}
 		return gamedatalist;
 	}
-	
-	
+
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public TemporalPlayData insertRewardData(TemporalPlayData playdata, String userEmail) {
-		
+
 		Member meber = new Member();
 		meber.setEmail(userEmail);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
-		if (memberlist.size() > 0)
-		{
+		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
 			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
-			for( TemporalPlayData data : todayList )
-			{
-				// 패키지 이름 같고 idx도 같고 상태가 보상가능 상태여야만 보상을 쥐어줌 
-				if(data.getPackagename().equals(playdata.getPackagename()) && data.getIdx() == playdata.getIdx()
-						&& "P001001".equals(data.getState()))
-				{
-					// 리워드 주고 
+			for (TemporalPlayData data : todayList) {
+				// 패키지 이름 같고 idx도 같고 상태가 보상가능 상태여야만 보상을 쥐어줌
+				if (data.getPackagename().equals(playdata.getPackagename()) && data.getIdx() == playdata.getIdx()
+						&& "P001001".equals(data.getState())) {
+					// 리워드 주고
 					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx());
 					updatePlayData(data, member_idx, userEmail, history);
 					playdata.setReward(history.getAmount());
 					playdata.setState("P001002");
-					
-				}
-				else
-				{
+
+				} else {
 					playdata.setState(data.getState());
 					playdata.setReward(data.getReward());
 				}
@@ -214,9 +197,8 @@ public class GamedataService {
 
 		return playdata;
 	}
-	
-	private void updatePlayData(TemporalPlayData playdata, long member_idx, String email, MtpHistory mtphistory)
-	{
+
+	private void updatePlayData(TemporalPlayData playdata, long member_idx, String email, MtpHistory mtphistory) {
 		PlayData mydata = new PlayData();
 		mydata.setIdx(playdata.getIdx());
 		mydata.setMember_idx(member_idx);
@@ -226,11 +208,18 @@ public class GamedataService {
 		mydata.setReward(mtphistory.getAmount());
 		// 보상완료
 		mydata.setState("P001002");
-		
+
 		gamedatamapper.updatePlaydata(mydata);
-		
+
 	}
-	
-	
-	
+
+	public ArrayList<PlayData> selectNopagePlaydata(String email) {
+		Member meber = new Member();
+		meber.setEmail(email);
+		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
+		long member_idx = memberlist.get(0).getIdx();
+		return gamedatamapper.selectTotalPlaydataNopage(member_idx);
+
+	}
+
 }
