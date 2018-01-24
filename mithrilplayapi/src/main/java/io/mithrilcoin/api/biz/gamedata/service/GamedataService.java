@@ -26,8 +26,13 @@ public class GamedataService {
 	@PostConstruct
 	public void init()
 	{
+		updatePlaystoreData();
+	}
+
+	public long updatePlaystoreData() {
 		int pagecount = 0;
 		int size = 10000;
+		long lastIndex = 0;
 		ArrayList<Playstoreappinfo> list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size);
 		
 		while(list.size() > 0)
@@ -37,13 +42,13 @@ public class GamedataService {
 				if(!playstoreRepo.hasContainKey(appInfo.getPackagename()))
 				{
 					playstoreRepo.setData(appInfo.getPackagename(), appInfo);
+					lastIndex = appInfo.getIdx();
 				}
 			}
 			pagecount = pagecount + size;
 			list = 	gamedatamapper.selectMassPlaystoreappinfo(pagecount, size);
 		}
-		
-		//playstoreRepo.getMultiData(keys)
+		return lastIndex;
 	}
 	
 	public ArrayList<Playstoreappinfo> selectPlayappInfo(ArrayList<Playstoreappinfo> applist)
