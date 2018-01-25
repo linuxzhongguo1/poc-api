@@ -47,7 +47,10 @@ public class GamedataService {
 		int size = 10000;
 		long lastIndex = 0;
 		ArrayList<Playstoreappinfo> list = gamedatamapper.selectMassPlaystoreappinfo(pagecount, size, idx);
-
+		if(list.size() == 0)
+		{
+			return idx;
+		}
 		while (list.size() > 0) {
 			for (Playstoreappinfo appInfo : list) {
 //				if (!playstoreRepo.hasContainKey(appInfo.getPackagename())) {
@@ -58,6 +61,7 @@ public class GamedataService {
 			pagecount = pagecount + size;
 			list = gamedatamapper.selectMassPlaystoreappinfo(pagecount, size, idx);
 		}
+		
 		return lastIndex;
 	}
 	
