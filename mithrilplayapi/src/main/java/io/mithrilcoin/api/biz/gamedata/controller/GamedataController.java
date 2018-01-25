@@ -34,6 +34,11 @@ public class GamedataController {
 	public long updateAppcash(@PathVariable int idx) {
 		return gamedataService.updatePlaystoreData(idx);
 	}
+	@PostMapping("/delete/appcache")
+	public ArrayList<Long> deleteAppcash(@RequestBody ArrayList<String> packageList) {
+		return gamedataService.deletePlaystoreData(packageList);
+	}
+	
 
 	@PostMapping("/insert/{email}/{accessPoint}/{idx}")
 	public ArrayList<TemporalPlayData> insertPlaydata(@RequestBody ArrayList<TemporalPlayData> dataList,

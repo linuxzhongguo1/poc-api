@@ -50,16 +50,35 @@ public class GamedataService {
 
 		while (list.size() > 0) {
 			for (Playstoreappinfo appInfo : list) {
-				if (!playstoreRepo.hasContainKey(appInfo.getPackagename())) {
+//				if (!playstoreRepo.hasContainKey(appInfo.getPackagename())) {
 					playstoreRepo.setData(appInfo.getPackagename(), appInfo);
 					lastIndex = appInfo.getIdx();
-				}
+//				}
 			}
 			pagecount = pagecount + size;
 			list = gamedatamapper.selectMassPlaystoreappinfo(pagecount, size, idx);
 		}
 		return lastIndex;
 	}
+	
+	public ArrayList<Long> deletePlaystoreData(ArrayList<String> pacakagelist)
+	{
+		HashMap<String, Playstoreappinfo> resultMaps = playstoreRepo.getMultiData(pacakagelist);
+		ArrayList<Long> list = new ArrayList<>();
+
+		Iterator<String> keyitor = resultMaps.keySet().iterator();
+		while (keyitor.hasNext()) {
+			Playstoreappinfo result = resultMaps.get(keyitor.next());
+			if (result != null) {
+				list.add(result.getIdx());
+			}
+		}
+		
+		playstoreRepo.deleteData(pacakagelist);
+		
+		return list;
+	}
+	
 
 	public ArrayList<Playstoreappinfo> selectPlayappInfo(ArrayList<Playstoreappinfo> applist) {
 		ArrayList<String> keys = new ArrayList<>();
