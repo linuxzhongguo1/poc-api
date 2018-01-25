@@ -74,6 +74,9 @@
 				<if test="playtime != null and playtime gt 0">
 				,PLAYTIME = #{playtime}
 				</if>
+				<if test="alttitle != null and alttitle !=''">
+				,ALTTITLE = #{alttitle}
+				</if>
 		WHERE
 			IDX = #{idx}
 		AND	MEMBER_IDX = #{member_idx}
@@ -84,6 +87,7 @@
 				 PACKAGENAME
 				 ,REWARD
 				 ,TITLE
+				 ,ALTTITLE
 				 ,STATE
 				 ,PLAYTIME
 				 ,REGISTDATE
