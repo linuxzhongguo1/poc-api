@@ -34,7 +34,7 @@ public class MtpService {
 	 * 가입 보상 지급 
 	 * @param member_idx
 	 */
-	@CacheEvict(value="MTPchache", key="#member_idx")
+	@CacheEvict(value="MTPCache", key="#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public void insertInviteReward(long member_idx)
 	{
@@ -57,7 +57,7 @@ public class MtpService {
 	 * 게임 데이터 보상 지급 
 	 * @param member_idx
 	 */
-	@CacheEvict(value="MTPchache", key="#member_idx")
+	@CacheEvict(value="MTPCache", key="#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MtpHistory insertDataReward(long member_idx, long playdata_idx)
 	{
@@ -80,7 +80,7 @@ public class MtpService {
 		return mtphistory;
 	}
 	
-	@Cacheable(value="MTPcache",key="#idx")
+	@Cacheable(value="MTPCache",key="#idx")
 	public MtpTotal selectMtpTotal(long idx) {
 		MtpTotal mtpTotal = mtpMapper.selectMtpTotalByMember(idx);
 		mtpTotal.setUsableamount(mtpTotal.getIncomeamount() - mtpTotal.getSpentamount() - mtpTotal.getExpireamount());

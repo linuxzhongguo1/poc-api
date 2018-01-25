@@ -30,7 +30,7 @@ public class GamedataController {
 		return gamedataService.selectPlayappInfo(gameList);
 	}
 
-	@GetMapping("/update/appcash/{idx}")
+	@GetMapping("/update/appcache/{idx}")
 	public long updateAppcash(@PathVariable int idx) {
 		return gamedataService.updatePlaystoreData(idx);
 	}
