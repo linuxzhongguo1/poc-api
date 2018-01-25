@@ -41,7 +41,7 @@ public class GamedataService {
 
 	@PostConstruct
 	public void init() {
-		updatePlaystoreData(0);
+		//updatePlaystoreData(0);
 	}
 
 	public long updatePlaystoreData(int idx) {
@@ -229,12 +229,29 @@ public class GamedataService {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
 			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
+			int count = 0;
+			for (TemporalPlayData data : todayList)
+			{
+				if(data.getState().equals("P001002"))
+				{
+					count++;
+				}
+				if(count == ONEDAY_MAX_REWARD)
+				{
+					playdata.setValid("false");
+					return playdata;
+				}
+			}
+			
+			
 			for (TemporalPlayData data : todayList) {
+				
 				// 패키지 이름 같고 idx도 같고 상태가 보상가능 상태여야만 보상을 쥐어줌
 				if (data.getPackagename().equals(playdata.getPackagename()) && data.getIdx() == playdata.getIdx()
 						&& "P001001".equals(data.getState())) {
 					// 리워드 주고
 					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx());
+					data.setAlttitle(playdata.getAlttitle());
 					updatePlayData(data, member_idx, userEmail, history);
 					playdata.setReward(history.getAmount());
 					playdata.setState("P001002");
