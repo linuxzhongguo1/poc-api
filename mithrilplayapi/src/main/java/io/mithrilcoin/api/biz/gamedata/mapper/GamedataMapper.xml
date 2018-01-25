@@ -87,6 +87,7 @@
 				 ,STATE
 				 ,PLAYTIME
 				 ,REGISTDATE
+				 ,MODIFYDATE
 		 	FROM PLAYDATA
 			WHERE 
 				STATE = 'P001002'
