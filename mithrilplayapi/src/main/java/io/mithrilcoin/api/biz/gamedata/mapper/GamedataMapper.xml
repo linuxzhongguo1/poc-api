@@ -92,5 +92,6 @@
 			WHERE 
 				STATE = 'P001002'
 			AND MEMBER_IDX = #{member_idx}
+			ORDER BY REGISTDATE DESC
 	</select>
 </mapper>

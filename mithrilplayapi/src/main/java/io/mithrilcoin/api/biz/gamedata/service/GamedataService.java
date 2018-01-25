@@ -25,6 +25,8 @@ import io.mithrilcoin.api.common.redis.RedisDataRepository;
 public class GamedataService {
 
 	private static final long VALID_PLAY_TIME = 60000;
+	private static final int ONEDAY_MAX_REWARD = 3;
+	
 	@Autowired
 	private RedisDataRepository<String, Playstoreappinfo> playstoreRepo;
 
@@ -128,7 +130,7 @@ public class GamedataService {
 				{
 					if (data.getPackagename().equals(gamdata.getPackagename())) {
 						findFlag = true;
-						// 보상이 완료된 상태라면
+						// 보상이 가능한 상태라면
 						if ("P001001".equals(data.getState())) {
 							gamdata.setValid("true");
 							exceptList.add(gamdata);
@@ -155,9 +157,23 @@ public class GamedataService {
 				}
 				
 			}
+			boolean canReward = true;
+			if(rewardedList.size() >= ONEDAY_MAX_REWARD)
+			{
+				canReward = false;
+			}
 			rewardedList.addAll(exceptList);
 			rewardedList.addAll(newList);
 			rewardedList.addAll(noneList);
+			if(!canReward)
+			{
+				for(TemporalPlayData data : rewardedList)
+				{
+					data.setValid("false");
+				}
+			}
+			
+			
 		} else {
 			return null;
 		}
