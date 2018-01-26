@@ -412,7 +412,7 @@ public class DateUtil {
 	 */
 	public String getUTCNow() {
 		ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-		return String.valueOf(date.toEpochSecond());
+		return String.valueOf(	date.toInstant().toEpochMilli());
 	}
 //	/***
 //	 * 현재 시간 스트링 반환 UTC 기준 
@@ -431,7 +431,7 @@ public class DateUtil {
 	 */
 	public String string2LocaleDateString(String utcdateString)
 	{
-		long t = Long.parseLong(utcdateString + "000");
+		long t = Long.parseLong(utcdateString);
 		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
 		
 		return simpleDate.format(t);
@@ -446,7 +446,7 @@ public class DateUtil {
 	{
 		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
 		Date date = dateFormat.parse(localeString);
-		long unixTime = (long)date.getTime()/1000;
+		long unixTime = (long)date.getTime();
 		
 		return String.valueOf(unixTime);
 	}
