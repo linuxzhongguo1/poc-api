@@ -191,9 +191,20 @@ public class MemberService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public Device updateDevice(Device device) {
 		
-		device.setUseyn("Y");
-		memberMapper.insertDevice(device);
+		ArrayList<Device> findDevices = memberMapper.selectDevice(device);
+		
+		if( findDevices.size() > 0)
+		{
+			device = findDevices.get(0);
+			device.setUseyn("Y");
+		}
+		else
+		{
+			device.setUseyn("Y");
+			memberMapper.insertDevice(device);
+		}
 		memberMapper.updateNewDevice(device);
+		memberMapper.updateActiveDevice(device);
 		
 		return device;
 	}
