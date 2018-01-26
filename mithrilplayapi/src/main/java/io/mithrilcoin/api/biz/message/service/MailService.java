@@ -27,6 +27,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.mithril.vo.message.Message;
 import io.mithrilcoin.api.biz.message.mapper.MessageMapper;
+import io.mithrilcoin.api.util.DateUtil;
 
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -42,6 +43,9 @@ public class MailService implements MessageService {
 
 	@Autowired
 	public JavaMailSender emailSender;
+	
+	@Autowired
+	private DateUtil dateutil;
 
 	@Override
 	public Message sendMessage(Message message) {
@@ -76,6 +80,7 @@ public class MailService implements MessageService {
 
 		logger.info("MailService : insertMessage " + message.getReceiver());
 		message.setState("M002002");
+		message.setRegistDate(dateutil.getUTCNow());
 		messageMapper.insertMessage(message);
 		logger.info("MailService : insertMessage " + message.getIdx());
 

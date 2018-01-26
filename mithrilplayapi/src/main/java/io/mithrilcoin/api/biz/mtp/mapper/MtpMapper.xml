@@ -35,7 +35,7 @@
 				,#{typecode}
 				,NULL
 				,NULL
-				,NOW()
+				,#{registdate}
 			)
 	</insert>
 	<insert id="insertMtpSource" parameterType="io.mithril.vo.mtp.MtpSource" useGeneratedKeys="true" keyProperty="idx" >
@@ -58,13 +58,13 @@
 				,#{amount}
 				,#{useyn}
 				,NULL
-				,NOW()
-				,NOW()
+				,#{registdate}
+				,#{modifydate}
 			)
 	</insert>
 	<update id="updateMtpSource" parameterType="io.mithril.vo.mtp.MtpSource">
 		UPDATE SET MTPSOURCE
-			MODIFYDATE = NOW()
+			MODIFYDATE = #{modifydate}
 			<if test="sourcename != null and sourcename !=''">
 				,SOURCENAME = #{sourcename}
 			</if>
@@ -107,7 +107,7 @@
 			SELECT 
 				IFNULL(CASE WHEN TYPECODE = 'T002001' THEN SUM(AMOUNT) END,0)  AS incomeamount	
 				,IFNULL(CASE WHEN TYPECODE = 'T002002' THEN SUM(AMOUNT) END, 0) AS spentamount
-				,IFNULL(CASE WHEN EXPIREDATE != null AND EXPIREDATE > NOW() THEN SUM(AMOUNT) END,0) AS expireamount
+				,IFNULL(CASE WHEN EXPIREDATE != null AND EXPIREDATE > UTC_TIMESTAMP() THEN SUM(AMOUNT) END,0) AS expireamount
 				,MEMBER_IDX
 			FROM MTPHISTORY
 			WHERE

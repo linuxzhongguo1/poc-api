@@ -20,7 +20,7 @@
 				,#{body}
 				,#{sender}
 				,#{receiver}
-				,NOW()
+				,#{registdate}
 			)
 	</insert>
 	<update id="updateMessage" parameterType="io.mithril.vo.message.Message">

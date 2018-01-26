@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.mithril.vo.playdata.Rating;
+import io.mithrilcoin.api.biz.test.mapper.DatabaseTestMapper;
 import io.mithrilcoin.api.biz.test.service.DatebaseTestService;
 import io.mithrilcoin.api.common.security.HashingUtil;
 
@@ -19,6 +21,9 @@ public class DatebaseTestController {
 	
 	@Autowired
 	private DatebaseTestService dbTestService;
+	
+	@Autowired
+	private DatabaseTestMapper mapper;
 	
 	@Autowired
 	private HashingUtil hashingUtil;
@@ -37,5 +42,13 @@ public class DatebaseTestController {
 	public String getHashedString(@PathVariable String normalString)
 	{
 		return hashingUtil.getHashedString(normalString);
+	}
+	
+	@GetMapping("/select/rate")
+	public Rating getRating()
+	{
+		Rating rate = mapper.selectRating();
+		
+		return rate;
 	}
 }

@@ -5,4 +5,8 @@
 	<select id="getNow" resultType="String">
 		SELECT NOW()
 	</select>
+	<select id="selectRating" resultType="io.mithril.vo.playdata.Rating">
+		SELECT * FROM RATING
+	</select>
+	
 </mapper>

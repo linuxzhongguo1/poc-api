@@ -14,7 +14,8 @@
 		
 	</select>
 	<select id="selectTodayPlayData" parameterType="long" resultType="io.mithril.vo.playdata.TemporalPlayData">
-		SELECT 
+		<![CDATA[
+		 SELECT 
 			 IDX
 			,MEMBER_IDX
 			,PACKAGENAME
@@ -26,8 +27,9 @@
 		FROM PLAYDATA
 		WHERE 
 			MEMBER_IDX = #{member_idx}
-			AND DATE(REGISTDATE) = CURRENT_DATE()
+			AND ( REGISTDATE >= UNIX_TIMESTAMP(CURDATE()) AND REGISTDATE < UNIX_TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL 1 DAY)))
 			ORDER BY REWARD DESC
+		]]> 
 	</select>
 	<insert id="insertPlayData" parameterType="io.mithril.vo.playdata.PlayData" useGeneratedKeys="true" keyProperty="idx">
 		INSERT INTO PLAYDATA
@@ -51,14 +53,14 @@
 				,#{playtime}
 				,#{state}
 				,#{modify_member_id}
-				,NOW()
-				,NOW()
+				,#{registdate}
+				,#{modifydate}
 			)
 	</insert>
 	<update id="updatePlaydata" parameterType="io.mithril.vo.playdata.PlayData">
 		UPDATE PLAYDATA
 			SET 
-				MODIFYDATE = NOW()
+				MODIFYDATE = #{modifydate}
 				<if test="state != null and state !=''">
 				,STATE = #{state}
 				</if>

@@ -1,5 +1,6 @@
 package io.mithrilcoin.api.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -8,8 +9,11 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoField;
+import java.time.temporal.TemporalField;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import org.springframework.stereotype.Component;
 
@@ -408,16 +412,17 @@ public class DateUtil {
 	 */
 	public String getUTCNow() {
 		ZonedDateTime date = ZonedDateTime.now(ZoneOffset.UTC);
-		return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+		return String.valueOf(date.toEpochSecond());
 	}
-	/***
-	 * 현재 시간 스트링 반환 UTC 기준 
-	 * @return
-	 */
-	public String getLocaleNow() {
-		LocalDateTime date = LocalDateTime.now();
-		return date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
-	}
+//	/***
+//	 * 현재 시간 스트링 반환 UTC 기준 
+//	 * @return
+//	 */
+//	public String getLocaleNow() {
+//		LocalDateTime date = LocalDateTime.now();
+//		ZoneOffset offset = ZoneOffset.
+//		return String.valueOf(date.toEpochSecond(ZoneOffset.systemDefault()));
+//	}
 	
 	/**
 	 * UTC 시간을 현재 locale 시간으로 변환 
@@ -426,22 +431,32 @@ public class DateUtil {
 	 */
 	public String string2LocaleDateString(String utcdateString)
 	{
+		long t = Long.parseLong(utcdateString + "000");
+		SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss", Locale.getDefault());
 		
-		DateTimeFormatter formmater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		LocalDateTime localdate = LocalDateTime.parse(utcdateString, formmater);
-		
-		return localdate.toString();
+		return simpleDate.format(t);
 	}
 	/**
 	 * locale 시간 문자열을 UTC 시간 문자열로 변경
-	 * @param localeString
+	 * @param localeString yyyy-MM-dd hh:mm:ss
 	 * @return
+	 * @throws ParseException 
 	 */
-	public String localeString2UTCString(String localeString)
+	public String localeString2UTCString(String localeString) throws ParseException
 	{
-		DateTimeFormatter formmater = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-		ZonedDateTime date = ZonedDateTime.parse(localeString, formmater);
-		return date.toString();
+		DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss",Locale.getDefault());
+		Date date = dateFormat.parse(localeString);
+		long unixTime = (long)date.getTime()/1000;
+		
+		return String.valueOf(unixTime);
 	}
 
+	public boolean isToday(String utcTime)
+	{
+		String dateString = string2LocaleDateString(utcTime);
+		return isToday(string2Date(dateString, "yyyy-MM-dd hh:mm:ss"));
+	}
+	
+	
+	
 }

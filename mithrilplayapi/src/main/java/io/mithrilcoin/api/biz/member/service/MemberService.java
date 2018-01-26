@@ -58,6 +58,10 @@ public class MemberService {
 		signUpMember.setState("M001001");
 		signUpMember.setRatio(1.0f);
 		logger.info("insertMember : memberMapper.insertMember");
+		String now = dateutil.getUTCNow();
+		signUpMember.setRegistdate(now);
+		signUpMember.setModifydate(now);
+		
 		memberMapper.insertMember(signUpMember);
 		if (signUpMember.getIdx() > 0) {
 			logger.info("insertMember : memberMapper.insertMember end");
@@ -66,6 +70,7 @@ public class MemberService {
 			device.setDeviceid(signUpMember.getDeviceid());
 			device.setMember_idx(signUpMember.getIdx());
 			device.setModel(signUpMember.getModel());
+			device.setRegistdate(now);
 			device.setUseyn("Y");
 			memberMapper.insertDevice(device);
 			memberMapper.updateNewDevice(device);
@@ -120,7 +125,9 @@ public class MemberService {
 			if ("M001001".equals(findMember.getState())) {
 				// 정상 인증회원으로 처리
 				findMember.setState("M001002");
-				findMember.setAuthdate(new Date());
+				String now = dateutil.getUTCNow();
+				findMember.setAuthdate(dateutil.getUTCNow());
+				findMember.setModifydate(now);
 				memberMapper.updateMember(findMember);
 				findMember = memberMapper.selectMember(member).get(0);
 				
@@ -155,16 +162,21 @@ public class MemberService {
 	public MemberDetail updateMemberDetail(MemberDetail memberdetail) {
 
 		MemberDetail findMemberdetail = memberMapper.selectMemberDetail(memberdetail);
+		String now = dateutil.getUTCNow();
+		memberdetail.setModifydate(now);
+	
 		if( findMemberdetail  != null)
 		{
 			memberMapper.updateMemberdetail(memberdetail);
 		}
 		else
 		{
+			memberdetail.setRegistdate(now);
 			memberMapper.insertMemberDetail(memberdetail);
 			Member member = new Member();
 			member.setIdx(memberdetail.getMember_idx());
 			member.setState("M001003");
+			member.setModifydate(now);
 			memberMapper.updateMember(member);
 			mtpService.insertInviteReward(memberdetail.getMember_idx());
 			
@@ -192,6 +204,7 @@ public class MemberService {
 	public Device updateDevice(Device device) {
 		
 		ArrayList<Device> findDevices = memberMapper.selectDevice(device);
+		String now = dateutil.getUTCNow();
 		
 		if( findDevices.size() > 0)
 		{
@@ -201,6 +214,7 @@ public class MemberService {
 		else
 		{
 			device.setUseyn("Y");
+			device.setRegistdate(now);
 			memberMapper.insertDevice(device);
 		}
 		memberMapper.updateNewDevice(device);

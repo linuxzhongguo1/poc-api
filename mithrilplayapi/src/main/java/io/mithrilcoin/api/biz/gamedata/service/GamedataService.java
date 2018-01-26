@@ -1,5 +1,6 @@
 package io.mithrilcoin.api.biz.gamedata.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -131,9 +132,9 @@ public class GamedataService {
 			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
 				
-				Date date = dateUtil.string2Date(gamdata.getPlaydate(), "yyyy-MM-dd");
+			
 				// 오늘이 아니면 전부 불인정
-				if( !dateUtil.isToday(date) )
+				if( !dateUtil.isToday(new Date()) )
 				{
 					continue;
 				}
@@ -204,6 +205,9 @@ public class GamedataService {
 		playdata.setState("P001001");
 		// 플레이 시간 타입 현재는 이거밖에 없음.
 		playdata.setTypecode("T004001");
+		String now = dateUtil.getUTCNow();
+		playdata.setModifydate(now);
+		playdata.setRegistdate(now);
 		gamedatamapper.insertPlayData(playdata);
 		data.setIdx(playdata.getIdx());
 		data.setState(playdata.getState());
@@ -239,10 +243,8 @@ public class GamedataService {
 		meber.setEmail(userEmail);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
 		
-		Date date = dateUtil.string2Date(playdata.getPlaydate(), "yyyy-MM-dd");
-		
 		// 오늘이 아니면 전부 불인정
-		if( !dateUtil.isToday(date) )
+		if( !dateUtil.isToday(playdata.getPlaydate()))
 		{
 			playdata.setValid("false");
 			return playdata;
@@ -300,7 +302,8 @@ public class GamedataService {
 		mydata.setReward(mtphistory.getAmount());
 		// 보상완료
 		mydata.setState("P001002");
-
+		String now = dateUtil.getUTCNow();
+		mydata.setModifydate(now);
 		gamedatamapper.updatePlaydata(mydata);
 
 	}
@@ -313,5 +316,6 @@ public class GamedataService {
 		return gamedatamapper.selectTotalPlaydataNopage(member_idx);
 
 	}
+	
 
 }

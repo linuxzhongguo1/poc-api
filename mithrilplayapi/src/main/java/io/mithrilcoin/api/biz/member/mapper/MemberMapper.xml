@@ -19,15 +19,15 @@
 			,#{password}
 			,#{state}
 			,#{ratio}
-			,NOW()
-			,NOW()
+			,#{registdate}
+			,#{modifydate}
 		)
 	</insert>
 	<!-- member UPDATE  -->
 	<update id="updateMember" parameterType="io.mithril.vo.member.Member">
 		UPDATE MEMBER
 			SET	
-				MODIFYDATE = NOW()
+				MODIFYDATE = #{modifydate}
 			 <if test="password !=null and password !=''">
 			 	, PASSWORD = #{password}
 			 </if>
@@ -38,7 +38,7 @@
 			 	, RATIO = #{ratio}
 			 </if>
 			  <if test="authdate !=null">
-			 	, AUTHDATE = NOW()
+			 	, AUTHDATE = #{authdate}
 			 </if>
 		WHERE
 				IDX = #{idx}
@@ -88,8 +88,8 @@
 				,#{birthmonth}
 				,#{country}
 				,#{city}
-				,NOW()
-				,NOW()
+				,#{registdate}
+				,#{modifydate}
 			)
 	</insert>
 	<!-- memberDETAIL insert  MEMBER_IDX 값 필수-->
@@ -110,7 +110,7 @@
 				,#{model}
 				,#{brand}
 				,#{useyn}
-				,NOW()
+				,#{registdate}
 			)
 	</insert>
 	<update id="updateNewDevice" parameterType="io.mithril.vo.member.Device">
@@ -150,11 +150,11 @@
 			)
 			VALUES
 			(
-				 #{MEMBER_IDX}
-				,#{ALIAS}
-				,#{PUBLICKEY}
-				,#{TYPECODE}
-				,#{REGISTDATE}
+				 #{member_idx}
+				,#{alias}
+				,#{publickey}
+				,#{typecode}
+				,#{registdate}
 			)
 	</insert>
 	<update id="updateAccount" parameterType="io.mithril.vo.member.Account">
@@ -167,7 +167,7 @@
 	<update id="updateMemberdetail" parameterType="io.mithril.vo.member.MemberDetail">
 		UPDATE MEMBERDETAIL
 			SET
-				MODIFYDATE = NOW()
+				MODIFYDATE = #{modifydate}
 				<if test="gender != null and gender !=''">
 				,GENDER = #{gender}
 				</if>

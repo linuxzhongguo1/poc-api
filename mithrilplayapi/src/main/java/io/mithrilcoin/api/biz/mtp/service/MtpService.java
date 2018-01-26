@@ -13,11 +13,15 @@ import io.mithril.vo.mtp.MtpHistory;
 import io.mithril.vo.mtp.MtpSource;
 import io.mithril.vo.mtp.MtpTotal;
 import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
+import io.mithrilcoin.api.util.DateUtil;
 
 @Service
 public class MtpService {
 	@Autowired
 	private MtpMapper mtpMapper;
+	
+	@Autowired
+	private DateUtil datetutil;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MtpHistory insertMtp(MtpHistory mtpHistory) {
@@ -46,11 +50,13 @@ public class MtpService {
 		
 		source = sourceList.get(0);
 		
+		
 		MtpHistory mtphistory = new MtpHistory();
 		mtphistory.setMember_idx(member_idx);
 		mtphistory.setAmount(source.getAmount());
 		mtphistory.setMtpsource_idx(source.getIdx());
 		mtphistory.setTypecode("T002001");
+		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
 	}
 	/***
@@ -75,6 +81,7 @@ public class MtpService {
 		mtphistory.setMtpsource_idx(source.getIdx());
 		mtphistory.setTypecode("T002001");
 		mtphistory.setPlaydata_idx(playdata_idx);
+		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
 		
 		return mtphistory;
