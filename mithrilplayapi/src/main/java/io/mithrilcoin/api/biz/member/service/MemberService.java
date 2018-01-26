@@ -1,6 +1,7 @@
 package io.mithrilcoin.api.biz.member.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,7 +120,10 @@ public class MemberService {
 			if ("M001001".equals(findMember.getState())) {
 				// 정상 인증회원으로 처리
 				findMember.setState("M001002");
+				findMember.setAuthdate(new Date());
 				memberMapper.updateMember(findMember);
+				findMember = memberMapper.selectMember(member).get(0);
+				
 				return findMember;
 			}
 			member.setState("");

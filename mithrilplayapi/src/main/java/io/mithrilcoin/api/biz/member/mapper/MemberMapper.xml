@@ -37,6 +37,9 @@
 			 <if test="ratio !=null and ratio !=''">
 			 	, RATIO = #{ratio}
 			 </if>
+			  <if test="authdate !=null">
+			 	, AUTHDATE = NOW()
+			 </if>
 		WHERE
 				IDX = #{idx}
 				<if test="email != null and email !=''">
@@ -52,6 +55,7 @@
 			,STATE
 			,RATIO
 			,REGISTDATE
+			,AUTHDATE
 			,MODIFYDATE
 		FROM MEMBER
 		WHERE

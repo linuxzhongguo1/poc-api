@@ -1,6 +1,7 @@
 package io.mithrilcoin.api.biz.gamedata.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -20,6 +21,7 @@ import io.mithrilcoin.api.biz.gamedata.mapper.GamedataMapper;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
 import io.mithrilcoin.api.biz.mtp.service.MtpService;
 import io.mithrilcoin.api.common.redis.RedisDataRepository;
+import io.mithrilcoin.api.util.DateUtil;
 
 @Service
 public class GamedataService {
@@ -38,6 +40,9 @@ public class GamedataService {
 
 	@Autowired
 	private MtpService mtpService;
+	
+	@Autowired
+	private DateUtil dateUtil;
 
 	@PostConstruct
 	public void init() {
@@ -125,7 +130,15 @@ public class GamedataService {
 			
 			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
+				
+				Date date = dateUtil.string2Date(gamdata.getPlaydate(), "yyyy-MM-dd");
+				// 오늘이 아니면 전부 불인정
+				if( !dateUtil.isToday(date) )
+				{
+					continue;
+				}
 				boolean findFlag = false;
+				gamdata.getPlaydate();
 				for (TemporalPlayData data : todayList) // 오늘 저장된 데이터
 				{
 					if (data.getPackagename().equals(gamdata.getPackagename())) {
@@ -221,10 +234,20 @@ public class GamedataService {
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public TemporalPlayData insertRewardData(TemporalPlayData playdata, String userEmail) {
-
+		
 		Member meber = new Member();
 		meber.setEmail(userEmail);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
+		
+		Date date = dateUtil.string2Date(playdata.getPlaydate(), "yyyy-MM-dd");
+		
+		// 오늘이 아니면 전부 불인정
+		if( !dateUtil.isToday(date) )
+		{
+			playdata.setValid("false");
+			return playdata;
+		}
+		
 		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
