@@ -300,6 +300,7 @@ public class GamedataService {
 		mydata.setPlaytime(playdata.getPlaytime());
 		mydata.setMtp_idx(mtphistory.getIdx());
 		mydata.setReward(mtphistory.getAmount());
+		mydata.setAlttitle(playdata.getAlttitle());
 		// 보상완료
 		mydata.setState("P001002");
 		String now = dateUtil.getUTCNow();
