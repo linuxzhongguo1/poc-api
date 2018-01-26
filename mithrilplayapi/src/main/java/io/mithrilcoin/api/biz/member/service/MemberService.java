@@ -188,4 +188,14 @@ public class MemberService {
 		return findMemberdetail;
 	}
 
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public Device updateDevice(Device device) {
+		
+		device.setUseyn("Y");
+		memberMapper.insertDevice(device);
+		memberMapper.updateNewDevice(device);
+		
+		return device;
+	}
+
 }

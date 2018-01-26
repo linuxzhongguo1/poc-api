@@ -120,8 +120,16 @@
 			WHERE 
 				 IDX != #{idx}
 			 AND MEMBER_IDX = #{member_idx} 
-		
 	</update>
+	<update id="updateDevice" parameterType="io.mithril.vo.member.Device">
+		UPDATE DEVICE
+			SET
+				 USEYN = 'N'
+			WHERE 
+				 IDX != #{idx}
+			 AND MEMBER_IDX = #{member_idx} 
+	</update>
+	
 	<insert id="insertAccount" parameterType="io.mithril.vo.member.Account" useGeneratedKeys="true"  keyProperty="idx">
 		INSERT INTO ACCOUNT
 			(

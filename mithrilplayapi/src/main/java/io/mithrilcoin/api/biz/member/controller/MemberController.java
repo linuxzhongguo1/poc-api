@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.exception.MithrilPlayExceptionCode;
+import io.mithril.vo.member.Device;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
@@ -86,5 +87,10 @@ public class MemberController {
 	{
 		//memberService.updateMemberDetail(memberdetail);
 		return memberService.updateMemberDetail(memberdetail);
+	}
+	@PostMapping("/update/device/{accessPoint}/{idx}")
+	public Device updateDevice(@RequestBody Device device, @PathVariable String accessPoint, @PathVariable String idx)
+	{
+		return memberService.updateDevice(device);
 	}
 }
