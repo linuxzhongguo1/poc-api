@@ -113,5 +113,6 @@
 			WHERE MTP.MEMBER_IDX = #{member_idx}
 				AND MTS.IDX = MTP.MTPSOURCE_IDX
 				AND MTP.SEQUENCE = 1
+			ORDER BY REGISTDATE DESC
 	</select>
 </mapper>
