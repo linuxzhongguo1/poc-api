@@ -12,6 +12,7 @@
 			,RATIO
 			,REGISTDATE
 			,MODIFYDATE
+			,RECENTLOGINDATE
 		)
 		VALUES
 		(
@@ -21,6 +22,7 @@
 			,#{ratio}
 			,#{registdate}
 			,#{modifydate}
+			,#{recentlogindate}
 		)
 	</insert>
 	<!-- member UPDATE  -->
@@ -37,8 +39,11 @@
 			 <if test="ratio !=null and ratio !=''">
 			 	, RATIO = #{ratio}
 			 </if>
-			  <if test="authdate !=null">
+			  <if test="authdate !=null and authdate !=''">
 			 	, AUTHDATE = #{authdate}
+			 </if>
+			  <if test="recentlogindate !=null and recentlogindate != ''">
+			 	, RECENTLOGINDATE = #{recentlogindate}
 			 </if>
 		WHERE
 				IDX = #{idx}

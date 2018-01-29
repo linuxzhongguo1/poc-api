@@ -61,6 +61,7 @@ public class MemberService {
 		String now = dateutil.getUTCNow();
 		signUpMember.setRegistdate(now);
 		signUpMember.setModifydate(now);
+		signUpMember.setRecentlogindate(now);
 		
 		memberMapper.insertMember(signUpMember);
 		if (signUpMember.getIdx() > 0) {
@@ -221,6 +222,13 @@ public class MemberService {
 		memberMapper.updateActiveDevice(device);
 		
 		return device;
+	}
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public Member updateMemberLogInTime(Member member) {
+		
+		memberMapper.updateMember(member);
+		
+		return member;
 	}
 
 }

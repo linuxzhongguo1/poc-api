@@ -93,4 +93,9 @@ public class MemberController {
 	{
 		return memberService.updateDevice(device);
 	}
+	@PostMapping("/update/loginTime/{accessPoint}/{idx}")
+	public Member updateDevice(@RequestBody Member member, @PathVariable String accessPoint, @PathVariable String idx)
+	{
+		return memberService.updateMemberLogInTime(member);
+	}
 }
