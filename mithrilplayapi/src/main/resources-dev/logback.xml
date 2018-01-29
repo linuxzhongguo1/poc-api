@@ -31,7 +31,7 @@
   <logger name="jdbc.resultset" level="OFF"/>
   <logger name="jdbc.resultsettable" level="OFF"/>
   <logger name="jdbc.connection" level="OFF"/>
-  
+  <!-- 
   
   <logger name="org.springframework.cache" level="trace">
      <appender-ref ref="STDOUT" />
@@ -45,7 +45,7 @@
   <logger name="kr.co.finy.cashcharge.common.redis" level="trace">
   	  <appender-ref ref="STDOUT" />
          <appender-ref ref="FILE" />
-  </logger>
+  </logger> -->
   <root level="DEBUG">
     <appender-ref ref="STDOUT" />
     <appender-ref ref="FILE" />
