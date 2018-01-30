@@ -22,6 +22,7 @@ public class RestApiConfiguration {
 //	@Autowired
 //	private AccessInfo accessInfo;
 	
+	@SuppressWarnings("unused")
 	private RestOperations getRestOperation(int readTimeout){
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 		factory.setConnectTimeout(1000);
