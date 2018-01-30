@@ -42,8 +42,8 @@ public class MemberService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MemberInfo insertMember(MemberInfo signUpMember) throws MithrilPlayException {
 		logger.info("io.mithrilcoin.api.biz.member.service insertMember ");
-	//	signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
-		signUpMember.setPassword(signUpMember.getPassword());
+		signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
+	//	signUpMember.setPassword(signUpMember.getPassword());
 		ArrayList<Member> memberlist = memberMapper.selectMember(signUpMember);
 		// 이미 회원가입된 사용자
 		if (memberlist.size() > 0) {
