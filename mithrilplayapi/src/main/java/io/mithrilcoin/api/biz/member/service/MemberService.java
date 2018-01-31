@@ -15,6 +15,7 @@ import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
 import io.mithril.vo.member.UserInfo;
+import io.mithrilcoin.api.biz.gamedata.service.GamedataService;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
 import io.mithrilcoin.api.biz.mtp.service.MtpService;
 import io.mithrilcoin.api.common.security.HashingUtil;
@@ -154,7 +155,7 @@ public class MemberService {
 		detail.setMember_idx(idxlong);
 		detail = memberMapper.selectMemberDetail(detail);
 		info.setMemberDetail(detail);
-
+		info.setValidtime(GamedataService.VALID_PLAY_TIME);
 		return info;
 
 	}

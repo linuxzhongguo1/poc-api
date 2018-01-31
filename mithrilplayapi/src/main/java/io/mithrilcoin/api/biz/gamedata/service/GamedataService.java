@@ -26,7 +26,7 @@ import io.mithrilcoin.api.util.DateUtil;
 @Service
 public class GamedataService {
 
-	private static final long VALID_PLAY_TIME = 60000;
+	public static final long VALID_PLAY_TIME = 60000;
 	private static final int ONEDAY_MAX_REWARD = 3;
 	
 	@Autowired
