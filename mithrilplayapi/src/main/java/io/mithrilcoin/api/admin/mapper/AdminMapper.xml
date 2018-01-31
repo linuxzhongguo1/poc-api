@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.admin.mapper.AdminMapper">
+	<select id="selectAdmin" parameterType="io.mithril.vo.admin.Admin" resultType="io.mithril.vo.admin.Admin">
+		SELECT 
+			IDX 
+			,ID
+			,PASSWORD
+			,NAME
+			,EMAIL
+			,LEVEL
+			,STATE
+			,MODIFYDATE
+			,REGISTDATE
+		FROM ADMIN
+		WHERE
+			ID = #{id}
+		<if test="idx gt 0">
+			AND IDX = #{idx}
+		</if>
+		<if test="email != null and email !=''">
+			AND EMAIL = #{email}
+		</if>
+		<if test="level != null and level !=''">
+			AND LEVEL = #{level}
+		</if>
+		<if test="state != null and state !=''">
+			AND STATE = #{state}
+		</if>
+	</select>
+	<select id="selectAdminList" parameterType="io.mithril.vo.admin.Admin" resultType="io.mithril.vo.admin.Admin">
+		SELECT 
+			IDX 
+			,ID
+			,PASSWORD
+			,NAME
+			,EMAIL
+			,LEVEL
+			,STATE
+			,MODIFYDATE
+			,REGISTDATE
+		FROM ADMIN
+		WHERE
+		    1 = 1
+		<if test="id != null and id !=''">
+			AND ID = #{id}
+		</if>
+			ID = #{id}
+		<if test="idx gt 0">
+			AND IDX = #{idx}
+		</if>
+		<if test="email != null and email !=''">
+			AND EMAIL = #{email}
+		</if>
+		<if test="level != null and level !=''">
+			AND LEVEL = #{level}
+		</if>
+		<if test="state != null and state !=''">
+			AND STATE = #{state}
+		</if>
+	</select>
+	
+	
+	<insert id="insertAdmin" parameterType="io.mithril.vo.admin.Admin" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO ADMIN
+			(
+				ID
+				,PASSWORD
+				,NAME
+				,EMAIL
+				,LEVEL
+				,STATE
+				,MODIFYDATE
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{id}
+				,#{password}
+				,#{name}
+				,#{email}
+				,#{level}
+				,#{state}
+				,NOW()
+				,NOW()
+			)
+	</insert>
+	<update id="updateAdmin" parameterType="io.mithril.vo.admin.Admin">
+		UPDATE ADMIN
+			SET
+				MODIFYDATE = NOW()
+				<if test="level != null and level !=''">
+				,LEVEL = #{level}
+				</if>
+				<if test="state != null and state !=''">
+				,STATE = #{state}
+				</if>
+				<if test="password !=null and password !=''">
+				,PASSWORD = #{password}
+				</if>
+				<if test="email != null and email !=''">
+				,EMAIL = #{email}
+				</if>
+		WHERE
+			IDX = #{idx}
+			<if test="id != null and id !=''">
+			AND ID = #{id}
+			</if>
+	</update>
+</mapper>
