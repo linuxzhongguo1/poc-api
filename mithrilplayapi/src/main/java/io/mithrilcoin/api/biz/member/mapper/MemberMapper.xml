@@ -255,5 +255,57 @@
 			</if>	 -->		
 	</select>
 	
+	<select id="selectMemberTotalCount" resultType="Integer">
+		SELECT COUNT(1) FROM MEMBER
+	</select>
+	
+	<select id="selectMemberSubCount" resultType="Integer">
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.PRE_COUNT"></include>
+			SELECT
+				 mem.idx as	idx
+				,mem.email as email
+				,cm.cmname as state
+				,det.gender as gender
+				,det.birthyear as birthyear
+				,det.birthmonth as birthmonth
+				,det.country as country
+				,det.city as city
+				,from_unixtime(left(mem.authdate, 10)) as authdate
+				,from_unixtime(left(mem.recentlogindate, 10)) as recentlogindate
+				,from_unixtime(left(mem.registdate, 10)) as registdate
+			FROM
+				MEMBER mem 
+				LEFT OUTER JOIN  MEMBERDETAIL det ON mem.idx = det.member_idx
+				,COMMONCODE cm
+			WHERE 
+				cm.cmcode = mem.state
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.POST_COUNT"></include> 
+	</select>
+	
+	
+	
+	<select id="selectMemberList" parameterType="io.mithril.vo.member.MemberListVo" resultType="io.mithril.vo.member.MemberListVo">
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.PRE_PAGE"></include>
+			SELECT
+				 mem.idx as	idx
+				,mem.email as email
+				,cm.cmname as state
+				,det.gender as gender
+				,det.birthyear as birthyear
+				,det.birthmonth as birthmonth
+				,det.country as country
+				,det.city as city
+				,from_unixtime(left(mem.authdate, 10)) as authdate
+				,from_unixtime(left(mem.recentlogindate, 10)) as recentlogindate
+				,from_unixtime(left(mem.registdate, 10)) as registdate
+			FROM
+				MEMBER mem 
+				LEFT OUTER JOIN  MEMBERDETAIL det ON mem.idx = det.member_idx
+				,COMMONCODE cm
+			WHERE 
+				cm.cmcode = mem.state
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.POST_PAGE"></include>
+	</select> 
+	
 	
 </mapper>

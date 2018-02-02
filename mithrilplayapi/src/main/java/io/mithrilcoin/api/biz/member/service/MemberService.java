@@ -14,6 +14,7 @@ import io.mithril.vo.member.Device;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
+import io.mithril.vo.member.MemberListVo;
 import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.gamedata.service.GamedataService;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
@@ -230,6 +231,21 @@ public class MemberService {
 		memberMapper.updateMember(member);
 		
 		return member;
+	}
+	
+	public ArrayList<MemberListVo> selectMemberList(MemberListVo vo)
+	{
+		int totalcount = memberMapper.selectMemberTotalCount();
+		int totalsubcount = memberMapper.selectMemberSubCount(vo);
+		ArrayList<MemberListVo> list = memberMapper.selectMemberList(vo);
+		
+		if(list.size() > 0)
+		{
+			list.get(0).setTotalcount(String.valueOf(totalcount));
+			list.get(0).setSearchcount(String.valueOf(totalsubcount));
+		}
+		
+		return list;
 	}
 
 }

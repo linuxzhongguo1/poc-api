@@ -2,6 +2,7 @@ package io.mithrilcoin.api.biz.member.controller;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 
 import javax.validation.Valid;
 
@@ -19,6 +20,7 @@ import io.mithril.vo.member.Device;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
+import io.mithril.vo.member.MemberListVo;
 import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.member.service.MemberService;
 import io.mithrilcoin.api.exception.MithrilPlayException;
@@ -97,5 +99,11 @@ public class MemberController {
 	public Member updateDevice(@RequestBody Member member, @PathVariable String accessPoint, @PathVariable String idx)
 	{
 		return memberService.updateMemberLogInTime(member);
+	}
+	
+	@PostMapping("/select/memberlist/{accessPoint}/{idx}")
+	public ArrayList<MemberListVo> selectMemberList(@RequestBody MemberListVo member, @PathVariable String accessPoint, @PathVariable String idx)
+	{
+		return memberService.selectMemberList(member);
 	}
 }

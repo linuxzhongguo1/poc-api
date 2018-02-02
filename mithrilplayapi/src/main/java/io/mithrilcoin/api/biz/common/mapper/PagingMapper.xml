@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.biz.common.mapper.PagingMapper">
+
+	<sql id="PRE_PAGE">
+		SELECT  
+		    <!--  #{pageNum,  jdbcType=INTEGER} AS pageNum
+		     , #{pageSize, jdbcType=INTEGER} AS pageSize -->
+<!-- 		     , #{limitNum, jdbcType=INTEGER} AS limitNum -->
+		      @rnum := @rnum+1 AS rnum
+		    <!--  , #{startDate, jdbcType=VARCHAR} AS startDate
+		     , #{endDate, jdbcType=VARCHAR} AS endDate
+		     , #{sortName, jdbcType=VARCHAR} AS sortName
+		     , #{sortOrder, jdbcType=VARCHAR} AS sortOrder
+		     
+		     , #{searchKey, jdbcType=VARCHAR} AS searchKey
+		     , #{searchValue, jdbcType=VARCHAR} AS searchValue -->
+		     , PAGE.*
+		FROM
+		(
+  	</sql>
+  	
+  	<sql id="PRE_NON_PAGE">
+		SELECT
+			@rnum := @rnum+1 AS rnum , 
+			PAGE.* 
+		FROM
+		(
+  	</sql>
+  	
+  	<sql id="PRE_COUNT">
+		SELECT
+			COUNT(*) AS COUNT
+		FROM
+		(
+  	</sql>  	
+  	
+    <sql id="POST_PAGE"> 
+    	) PAGE
+    	, (SELECT @rnum := 0) r
+    	<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.SEARCHING" />    	
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.ORDERING" />    	
+    	<if test="offset gte 0 and limit gt 0">
+    	LIMIT #{offset}, #{limit}
+    	</if>
+    </sql>
+	
+    <sql id="POST_NON_PAGE"> 
+		) PAGE
+		, (SELECT @rnum := 0) r
+    </sql>
+    
+    <sql id="POST_COUNT"> 
+		) PAGE
+    </sql>  
+
+	<sql id="ORDERING">
+		<if test="sortname != null and sortname != ''">
+			ORDER BY ${sortname}
+		<if test="sorttype != null and sorttype != ''">
+			${sorttype}
+		</if>
+	</if>
+	</sql>
+	
+	<sql id="SEARCHING">
+		<if test="searchName != null and searchName != '' and searchValue != null and searchValue != '' ">
+			WHERE ${searchName} =  #{searchValue}
+		</if>
+	</sql>
+	
+	<sql id="MULTI_ORDERING">
+	<!-- ORDER BY group_no DESC , depth ASC , order_no ASC -->
+	<!-- sortmap is hashmap -->
+		<if test="sortMap != null">
+			ORDER BY 
+			<foreach collection="sortMap" item="sort" index="key" open="" close="" separator=",">
+				${key} ${sort}
+			</foreach>
+		</if>
+	</sql>
+    
+	<sql id="MULTI_ORDERING_NONE_ORDERBY">
+	<!-- group_no DESC , depth ASC , order_no ASC -->
+	<!-- sortmap is hashmap -->
+		<if test="sortMap != null">
+			<foreach collection="sortMap" item="sort" index="key" open="" close="" separator=",">
+				${key} ${sort}
+			</foreach>
+		</if>
+	</sql>
+
+</mapper>

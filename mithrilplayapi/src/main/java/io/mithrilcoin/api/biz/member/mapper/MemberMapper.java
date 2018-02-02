@@ -8,6 +8,7 @@ import io.mithril.vo.member.Account;
 import io.mithril.vo.member.Device;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
+import io.mithril.vo.member.MemberListVo;
 
 /**
  * 회원 가입, 변경, 기타 정보 처리 DAO 클래스 
@@ -40,5 +41,11 @@ public interface MemberMapper {
 	public ArrayList<Device> selectDevice(Device device);
 	
 	public MemberDetail selectMemberDetail(MemberDetail detail);
+	
+	public ArrayList<MemberListVo> selectMemberList(MemberListVo vo);
+	
+	public int selectMemberSubCount(MemberListVo vo);
+	
+	public int selectMemberTotalCount();
 	
 }
