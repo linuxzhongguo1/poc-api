@@ -52,6 +52,7 @@
     
     <sql id="POST_COUNT"> 
 		) PAGE
+		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.SEARCHING" />  
     </sql>  
 
 	<sql id="ORDERING">
