@@ -65,9 +65,35 @@
 	</sql>
 	
 	<sql id="SEARCHING">
-		<if test="searchName != null and searchName != '' and searchValue != null and searchValue != '' ">
+		<!-- <if test="searchName != null and searchName != '' and searchValue != null and searchValue != '' "> 
 			WHERE ${searchName} =  #{searchValue}
-		</if>
+		</if> -->
+		<trim prefix="WHERE" prefixOverrides="AND|OR">
+			1 = 1
+			<if test="searchlist != null">
+				<foreach collection="searchlist" item="item">
+					AND ${item.searchname} LIKE CONCAT('%', #{item.searchvalue},'%')
+				</foreach>
+			</if>
+			<if test='datename != null and datename != ""'>
+				<choose>
+					<when test="startdate != '' and enddate != ''">
+						AND ${datename} <![CDATA[>=]]>  #{startdate} AND ${datename} <![CDATA[<=]]>  #{enddate}
+					</when>
+					<otherwise>
+						<choose>
+							<when test="startdate != ''">
+								AND ${datename} <![CDATA[>=]]> #{startdate} 
+							</when>
+							<otherwise>
+								AND ${datename} <![CDATA[<=]]> #{enddate}
+							</otherwise>
+						</choose>
+					</otherwise>
+				</choose>
+			</if>
+		</trim>
+			
 	</sql>
 	
 	<sql id="MULTI_ORDERING">
