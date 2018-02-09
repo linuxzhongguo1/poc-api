@@ -1,8 +1,8 @@
 # Mithrilplayapi
 
-Mithril Play API Server for POC
+>Mithril Play API Server for POC
 
-Mithril Play API server Environment
+>Mithril Play API server Environment
 
 * JDK 1.8
 * Spring framework 4.X 
