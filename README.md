@@ -1,6 +1,5 @@
 # Mithrilplayapi
-
->Mithril Play API Server for POC
+Mithril Play API Server for POC
 
 >Mithril Play API server Environment
 
@@ -11,7 +10,7 @@
 * Redis 3.X
 * Maria Database
 
-Core API
+>Core API
 * MEMBER API 
 
 API for member management
