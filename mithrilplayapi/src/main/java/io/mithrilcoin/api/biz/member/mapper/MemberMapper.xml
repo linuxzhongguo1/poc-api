@@ -105,6 +105,7 @@
 				,DEVICEID
 				,MODEL
 				,BRAND
+				,FCMID
 				,USEYN
 				,REGISTDATE
 			)
@@ -114,6 +115,7 @@
 				,#{deviceid}
 				,#{model}
 				,#{brand}
+				,#{fcmid}
 				,#{useyn}
 				,#{registdate}
 			)
@@ -126,18 +128,21 @@
 				 IDX != #{idx}
 			 AND MEMBER_IDX = #{member_idx} 
 	</update>
-	<update id="updateDevice" parameterType="io.mithril.vo.member.Device">
+	<!-- <update id="updateDevice" parameterType="io.mithril.vo.member.Device">
 		UPDATE DEVICE
 			SET
 				 USEYN = 'N'
 			WHERE 
 				 IDX != #{idx}
 			 AND MEMBER_IDX = #{member_idx} 
-	</update>
+	</update> -->
 	<update id="updateActiveDevice" parameterType="io.mithril.vo.member.Device">
 		UPDATE DEVICE
 			SET
 				 USEYN = 'Y'
+				 <if test="fcmid != null and fcmid !=''">
+				 , FCMID = #{fcmid}
+				 </if>
 			WHERE 
 				 IDX = #{idx}
 			 AND MEMBER_IDX = #{member_idx} 
@@ -199,6 +204,7 @@
 				,DEVICEID
 				,MODEL
 				,BRAND
+				,FCMID
 				,USEYN
 				,REGISTDATE
 			FROM DEVICE

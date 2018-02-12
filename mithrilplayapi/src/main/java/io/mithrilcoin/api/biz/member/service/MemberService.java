@@ -74,6 +74,7 @@ public class MemberService {
 			device.setMember_idx(signUpMember.getIdx());
 			device.setModel(signUpMember.getModel());
 			device.setRegistdate(now);
+			device.setFcmid(signUpMember.getFcmid());
 			device.setUseyn("Y");
 			memberMapper.insertDevice(device);
 			memberMapper.updateNewDevice(device);
@@ -151,6 +152,7 @@ public class MemberService {
 		ArrayList<Device> deviceList = memberMapper.selectDevice(device);
 		if (deviceList.size() > 0) {
 			info.setDeviceid(deviceList.get(deviceList.size() - 1).getDeviceid());
+			info.setFcmid(deviceList.get(deviceList.size() - 1).getFcmid());
 		}
 		MemberDetail detail = new MemberDetail();
 		detail.setMember_idx(idxlong);
@@ -208,18 +210,22 @@ public class MemberService {
 		
 		ArrayList<Device> findDevices = memberMapper.selectDevice(device);
 		String now = dateutil.getUTCNow();
-		
+		String fcmid = device.getFcmid();
 		if( findDevices.size() > 0)
 		{
+		
 			device = findDevices.get(0);
+			device.setFcmid(fcmid);
 			device.setUseyn("Y");
 		}
 		else
 		{
 			device.setUseyn("Y");
 			device.setRegistdate(now);
+			device.setFcmid(fcmid);
 			memberMapper.insertDevice(device);
 		}
+		
 		memberMapper.updateNewDevice(device);
 		memberMapper.updateActiveDevice(device);
 		
