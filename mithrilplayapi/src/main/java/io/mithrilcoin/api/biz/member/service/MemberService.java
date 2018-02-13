@@ -75,6 +75,7 @@ public class MemberService {
 			device.setModel(signUpMember.getModel());
 			device.setRegistdate(now);
 			device.setFcmid(signUpMember.getFcmid());
+			device.setOsversion(signUpMember.getOsversion());
 			device.setUseyn("Y");
 			memberMapper.insertDevice(device);
 			memberMapper.updateNewDevice(device);
@@ -159,6 +160,14 @@ public class MemberService {
 		detail = memberMapper.selectMemberDetail(detail);
 		info.setMemberDetail(detail);
 		info.setValidtime(GamedataService.VALID_PLAY_TIME);
+		
+		Member member = new Member();
+		member.setIdx(idxlong);
+		ArrayList<Member> memlist = memberMapper.selectMember(member);
+		if(memlist.size() > 0 )
+		{
+			info.setRegistdate(memlist.get(0).getRegistdate());
+		}
 		return info;
 
 	}
@@ -211,11 +220,13 @@ public class MemberService {
 		ArrayList<Device> findDevices = memberMapper.selectDevice(device);
 		String now = dateutil.getUTCNow();
 		String fcmid = device.getFcmid();
+		String osversion = device.getOsversion();
 		if( findDevices.size() > 0)
 		{
 		
 			device = findDevices.get(0);
 			device.setFcmid(fcmid);
+			device.setOsversion(osversion);
 			device.setUseyn("Y");
 		}
 		else
@@ -223,6 +234,7 @@ public class MemberService {
 			device.setUseyn("Y");
 			device.setRegistdate(now);
 			device.setFcmid(fcmid);
+			device.setOsversion(osversion);
 			memberMapper.insertDevice(device);
 		}
 		

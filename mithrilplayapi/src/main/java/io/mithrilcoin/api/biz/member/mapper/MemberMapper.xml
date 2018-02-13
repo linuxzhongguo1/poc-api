@@ -62,9 +62,13 @@
 			,REGISTDATE
 			,AUTHDATE
 			,MODIFYDATE
+			,REGISTDATE
 		FROM MEMBER
 		WHERE
-			EMAIL = #{email}
+			1 =1 
+			<if test="email != null and email !=''">
+			AND	EMAIL = #{email}
+			</if>
 			<if test="idx gt 0">
 			AND	IDX = #{idx}
 			</if>
@@ -106,6 +110,7 @@
 				,MODEL
 				,BRAND
 				,FCMID
+				,OSVERSION
 				,USEYN
 				,REGISTDATE
 			)
@@ -116,6 +121,7 @@
 				,#{model}
 				,#{brand}
 				,#{fcmid}
+				,#{osversion}
 				,#{useyn}
 				,#{registdate}
 			)
@@ -142,6 +148,9 @@
 				 USEYN = 'Y'
 				 <if test="fcmid != null and fcmid !=''">
 				 , FCMID = #{fcmid}
+				 </if>
+				  <if test="osversion != null and osversion !=''">
+				 , OSVERSION = #{osversion}
 				 </if>
 			WHERE 
 				 IDX = #{idx}
@@ -205,6 +214,7 @@
 				,MODEL
 				,BRAND
 				,FCMID
+				,OSVERSION
 				,USEYN
 				,REGISTDATE
 			FROM DEVICE
