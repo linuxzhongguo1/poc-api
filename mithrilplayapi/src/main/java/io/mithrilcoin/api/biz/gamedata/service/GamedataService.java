@@ -200,6 +200,7 @@ public class GamedataService {
 		playdata.setPackagename(data.getPackagename());
 		playdata.setTitle(data.getTitle());
 		playdata.setPlaytime(data.getPlaytime());
+		playdata.setVersion(data.getVersion());
 		// 보상가능
 		playdata.setState("P001001");
 		// 플레이 시간 타입 현재는 이거밖에 없음.
