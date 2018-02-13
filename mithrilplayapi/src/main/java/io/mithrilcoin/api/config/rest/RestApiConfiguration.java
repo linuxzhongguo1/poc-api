@@ -13,14 +13,7 @@ import org.springframework.web.client.RestTemplate;
  *
  */
 @Configuration
-//@PropertySource("classpath:apiAccess.properties")
 public class RestApiConfiguration {
-	
-	@Autowired
-	Environment env;
-	
-//	@Autowired
-//	private AccessInfo accessInfo;
 	
 	@SuppressWarnings("unused")
 	private RestOperations getRestOperation(int readTimeout){
@@ -30,28 +23,5 @@ public class RestApiConfiguration {
 		RestTemplate restTemplate = new RestTemplate(factory);
 		return restTemplate;
 	}
-	
-//	@Bean(name="gatewayAPIRestTemplate", autowire = Autowire.BY_NAME)
-//	public IRestTemplate gatewayAPIRestTemplate(){
-//		return new APIRestTemplate(
-//				getRestOperation(env.getProperty("gatewayApi.timeout	", int.class, 60000))
-//				, env.getProperty("gatewayApi.host")
-//				, env.getProperty("gatewayApi.port")
-//				, accessInfo
-//				);
-//	}
-//	
-//	@Bean(name="bizMailAPIRestTemplate", autowire = Autowire.BY_NAME)
-//	public IRestTemplate bizMailAPIRestTemplate(){
-////		biz.mail.host=http://www.bizmailer.co.kr
-////		biz.mail.port=80
-////		biz.mail.time=15000
-//		return new APIRestTemplate(
-//				getRestOperation(env.getProperty("biz.mail.host.timeout	", int.class, 15000))
-//				, env.getProperty("biz.mail.host")
-//				, env.getProperty("biz.mail.port")
-//				, null
-//				);
-//	}
 
 }

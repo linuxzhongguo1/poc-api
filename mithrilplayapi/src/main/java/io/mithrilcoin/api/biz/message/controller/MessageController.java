@@ -19,6 +19,10 @@ public class MessageController {
 	@Qualifier("mailService")
 	private MessageService mailService;
 	
+	@Autowired
+	@Qualifier("pushService")
+	private MessageService pushService;
+	
 	@PostMapping("/send/{accessPoint}/{idx}")
 	public Message sendMessage(@RequestBody Message message,@PathVariable String accessPoint, @PathVariable String idx)
 	{
@@ -27,8 +31,15 @@ public class MessageController {
 		{
 			message = mailService.sendMessage(message);
 		}
+		else
+		{
+			message = pushService.sendMessage(message);
+		}
 		return message;
 	}
+	
+	
+	
 //	
 //	@GetMapping("/select/")
 //	public ArrayList<Message> selectMessage(Message message)

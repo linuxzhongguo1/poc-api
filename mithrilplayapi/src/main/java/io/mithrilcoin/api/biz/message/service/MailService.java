@@ -32,6 +32,7 @@ import io.mithrilcoin.api.util.DateUtil;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 
 @Service("mailService")
 public class MailService implements MessageService {
