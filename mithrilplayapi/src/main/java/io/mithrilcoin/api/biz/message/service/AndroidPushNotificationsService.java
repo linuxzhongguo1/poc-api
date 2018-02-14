@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,33 +38,43 @@ public class AndroidPushNotificationsService implements MessageService{
 		{
 			
 			logger.info("AndroidPushNotificationsService : sendMessage to " + message.getReceiver());
-			insertMessage(message);
-			JSONObject body = new JSONObject();
-			//body.put("to", "fCDNjliwAXI:APA91bF_CnuoAza5enNA5uZgzOI61S-S2eVHLiw9sTFlxu6evxyJCFK1p41CnCCa3M0CrK62LXJxBZj1jydffCHzDKDyRE6QtcdqgJJulgbFnKHsRUETSDL1yIqoK9pa4touOM-2PVky");
-			body.put("to", message.getReceiver());
-			/*JSONObject notification = new JSONObject();
-			notification.put("title", "This is from server");
-			notification.put("body", "Test Message!");*/
-			
-			JSONObject data = new JSONObject();
-			data.put("title", message.getTitle());
-			data.put("message", message.getBody());
-			data.put("type", message.getTypecode());
-			data.put("url", "http://url");
-			data.put("query", "select * from user");
-			
-			//body.put("notification", notification);
-			body.put("data", data);
-			
-			HttpEntity<String> request = new HttpEntity<>(body.toString());
+			if( message.getReceiver() == null) // 전체 전송 
+			{
+				//1 목록 추출 
+				// N 건 씩 끊어서 인서트 
+				// N 건 비동기 푸쉬 전송 
+				// ??? 어떻게 업데이트를 묶음 단위로 처리 할까 비동기 콜백 때 마다 Update 하면 DB 죽는다. ( 20 만건 이라고 생각해봐.. UPdate 20만번)
+			}
+			else // 단건 전송 
+			{
+				insertMessage(message);
+				JSONObject body = new JSONObject();
+				//body.put("to", "fCDNjliwAXI:APA91bF_CnuoAza5enNA5uZgzOI61S-S2eVHLiw9sTFlxu6evxyJCFK1p41CnCCa3M0CrK62LXJxBZj1jydffCHzDKDyRE6QtcdqgJJulgbFnKHsRUETSDL1yIqoK9pa4touOM-2PVky");
+				body.put("to", message.getReceiver());
+				/*JSONObject notification = new JSONObject();
+				notification.put("title", "This is from server");
+				notification.put("body", "Test Message!");*/
+				
+				JSONObject data = new JSONObject();
+				data.put("title", message.getTitle());
+				data.put("message", message.getBody());
+				data.put("type", message.getTypecode());
+				data.put("url", "http://url");
+				data.put("query", "select * from user");
+				
+				//body.put("notification", notification);
+				body.put("data", data);
+				
+				HttpEntity<String> request = new HttpEntity<>(body.toString());
 
-			String pushNotification = sender.send(request);
-			
-			message.setBody(pushNotification);
-			
-			message.setState("M002003");
-			updateMessage(message);
-			return message;
+				String pushNotification = sender.send(request);
+				
+				message.setBody(pushNotification);
+				
+				message.setState("M002003");
+				updateMessage(message);
+				return message;
+			}
 			//pushNotification.thenApply()
 			//CompletableFuture.allOf(pushNotification).join();
 			

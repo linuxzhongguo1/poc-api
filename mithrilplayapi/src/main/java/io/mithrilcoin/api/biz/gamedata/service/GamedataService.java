@@ -130,8 +130,6 @@ public class GamedataService {
 			
 			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
-				
-			
 				// 오늘이 아니면 전부 불인정
 				if( !dateUtil.isToday(new Date()) )
 				{
@@ -185,8 +183,6 @@ public class GamedataService {
 					data.setValid("false");
 				}
 			}
-			
-			
 		} else {
 			return null;
 		}

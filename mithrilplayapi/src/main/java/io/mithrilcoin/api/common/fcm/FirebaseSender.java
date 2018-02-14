@@ -1,9 +1,11 @@
 package io.mithrilcoin.api.common.fcm;
 
 import java.util.ArrayList;
+import java.util.concurrent.CompletableFuture;
 
 import org.springframework.http.HttpEntity;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.client.RestTemplate;
 
 import io.mithrilcoin.api.biz.message.handler.HeaderRequestInterceptor;
@@ -32,6 +34,22 @@ public class FirebaseSender {
 
 		return firebaseResponse;
 		//return CompletableFuture.completedFuture(firebaseResponse);
+	}
+	
+	@Async
+	public CompletableFuture<String> asyncSend(HttpEntity<String> entity)
+	{
+		RestTemplate restTemplate = new RestTemplate();
+
+		ArrayList<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
+		interceptors.add(new HeaderRequestInterceptor("Authorization", "key=" + firebase_server_key));
+		interceptors.add(new HeaderRequestInterceptor("Content-Type", "application/json"));
+		restTemplate.setInterceptors(interceptors);
+		// 비동기 전달 
+		String firebaseResponse = restTemplate.postForObject(firebase_api_url, entity, String.class);
+		
+		// async compute after post is ended.
+		return CompletableFuture.completedFuture(firebaseResponse);
 	}
 
 }
