@@ -24,4 +24,6 @@ public interface GamedataMapper {
 	public int updatePlaydata(PlayData playdata);
 
 	public ArrayList<PlayData> selectTotalPlaydataNopage(@Param("member_idx") long member_idx);
+
+	public ArrayList<TemporalPlayData> selectTodayPlayDataHistory(@Param("member_idx") long member_idx);
 }

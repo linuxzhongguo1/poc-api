@@ -112,81 +112,143 @@ public class GamedataService {
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public ArrayList<TemporalPlayData> insertPlayData(ArrayList<TemporalPlayData> dataList, String email) {
-
-		// 1 게임 인 것들만 분리
+		
+		// 1 게임 인 것들만 분리 
 		ArrayList<TemporalPlayData> gamePlaydatalist = getGameAppData(dataList);
 		// 2 분리된 것들 중에서 select 후 없는 애들은 insert
 		Member meber = new Member();
 		meber.setEmail(email);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
-		ArrayList<TemporalPlayData> rewardedList = new ArrayList<>();
-		ArrayList<TemporalPlayData> newList = new ArrayList<>();
-		ArrayList<TemporalPlayData> exceptList = new ArrayList<>(); 
-		ArrayList<TemporalPlayData> noneList = new ArrayList<>(); 
+		long member_idx = 0;
 		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
-			long member_idx = findmember.getIdx();
-			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
+			member_idx = findmember.getIdx();
+		}
+		if(member_idx > 0)
+		{
+			ArrayList<TemporalPlayData> todayHistoryList = gamedatamapper.selectTodayPlayDataHistory(member_idx);
+			HashMap<String, ArrayList<TemporalPlayData>> todayHistoryMap = new HashMap<>();
 			
-			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
+			for(TemporalPlayData todayData : todayHistoryList)
 			{
-				// 오늘이 아니면 전부 불인정
-				if( !dateUtil.isToday(new Date()) )
+				if(!todayHistoryMap.containsKey(todayData.getPackagename()))
 				{
-					continue;
+					ArrayList<TemporalPlayData> list = new ArrayList<>();
+					list.add(todayData);
+					todayHistoryMap.put(todayData.getPackagename(), list);
 				}
-				boolean findFlag = false;
-				gamdata.getPlaydate();
-				for (TemporalPlayData data : todayList) // 오늘 저장된 데이터
+			}
+			
+			for(TemporalPlayData gamedata : gamePlaydatalist)
+			{
+				String packagename = gamedata.getPackagename();
+				if(todayHistoryMap.containsKey(packagename))
 				{
-					if (data.getPackagename().equals(gamdata.getPackagename())) {
-						findFlag = true;
-						// 보상이 가능한 상태라면
-						if ("P001001".equals(data.getState())) {
-							gamdata.setValid("true");
-							exceptList.add(gamdata);
-						} else {
-							gamdata.setValid("false");
-							rewardedList.add(gamdata);
+					ArrayList<TemporalPlayData> list = todayHistoryMap.get(packagename);
+					for(TemporalPlayData data : list)
+					{
+						if(!data.getStarttime().equals(gamedata.getStarttime()) && 
+								!data.getEndtime().equals(gamedata.getEndtime()))
+						{
+							// insert gamedata history
 						}
-						gamdata.setReward(data.getReward());
-						gamdata.setIdx(data.getIdx());
-						gamdata.setState(data.getState());
-						
 					}
 				}
-				if (!findFlag) {
-					if (gamdata.getPlaytime() >= VALID_PLAY_TIME) {
-						gamdata.setValid("true");
-						insertPlayData(gamdata, member_idx, email);
-						newList.add(gamdata);
-					} else {
-						gamdata.setValid("false");
-						noneList.add(gamdata);
-					}
+				else
+				{
 					
 				}
-				
 			}
-			boolean canReward = true;
-			if(rewardedList.size() >= ONEDAY_MAX_REWARD)
-			{
-				canReward = false;
-			}
-			rewardedList.addAll(exceptList);
-			rewardedList.addAll(newList);
-			rewardedList.addAll(noneList);
-			if(!canReward)
-			{
-				for(TemporalPlayData data : rewardedList)
-				{
-					data.setValid("false");
-				}
-			}
-		} else {
-			return null;
+			
+			
+			
 		}
-		return rewardedList;
+		return null;
+		
+//		ArrayList<TemporalPlayData> rewardedList = new ArrayList<>();
+//		ArrayList<TemporalPlayData> newList = new ArrayList<>();
+//		ArrayList<TemporalPlayData> exceptList = new ArrayList<>(); 
+//		ArrayList<TemporalPlayData> noneList = new ArrayList<>(); 
+//		if (memberlist.size() > 0) {
+//			Member findmember = memberlist.get(0);
+//			long member_idx = findmember.getIdx();
+//			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
+//			ArrayList<TemporalPlayData> todayHistoryList = gamedata
+//			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
+//			{
+////				// 오늘이 아니면 전부 불인정 .. 이상한 코드를 짜놨어..
+////				if( !dateUtil.isToday(new Date()) )
+////				{
+////					continue;
+////				}
+//				//gamdata.getPlaydate();
+//				boolean findFlag = false;
+//				for (TemporalPlayData data : todayList) // 오늘 저장된 데이터
+//				{
+//					if (data.getPackagename().equals(gamdata.getPackagename())) {
+//						
+//						if( !data.getStarttime().equals(gamdata.getStarttime()) 
+//								&& !data.getEndtime().equals(gamdata.getEndtime()))
+//						{
+//							// playhistory data insert 
+//							gamedatamapper.insertPlay
+//							
+//						}
+//						else
+//						{
+//						}
+//						
+//						
+//						
+//						findFlag = true;
+//						// 보상이 가능한 상태라면
+//						if ("P001001".equals(data.getState())) {
+//							gamdata.setValid("true");
+//							exceptList.add(gamdata);
+//						} else {
+//							gamdata.setValid("false");
+//							rewardedList.add(gamdata);
+//						}
+//						gamdata.setReward(data.getReward());
+//						gamdata.setIdx(data.getIdx());
+//						gamdata.setState(data.getState());
+//						
+//					}
+//				}
+//				if (!findFlag) {
+//					if (gamdata.getPlaytime() >= VALID_PLAY_TIME) {
+//						gamdata.setValid("true");
+//						insertPlayData(gamdata, member_idx, email);
+//						newList.add(gamdata);
+//					} else {
+//						gamdata.setValid("false");
+//						noneList.add(gamdata);
+//					}
+//					
+//				}
+//				
+//			}
+//			boolean canReward = true;
+//			if(rewardedList.size() >= ONEDAY_MAX_REWARD)
+//			{
+//				canReward = false;
+//			}
+//			rewardedList.addAll(exceptList);
+//			rewardedList.addAll(newList);
+//			rewardedList.addAll(noneList);
+//			if(!canReward)
+//			{
+//				for(TemporalPlayData data : rewardedList)
+//				{
+//					data.setValid("false");
+//				}
+//			}
+//		} else {
+//			return null;
+//		}
+//		return rewardedList;
+		
+	//	return null;
 	}
 
 	private TemporalPlayData insertPlayData(TemporalPlayData data, long member_idx, String email) {
@@ -196,7 +258,7 @@ public class GamedataService {
 		playdata.setPackagename(data.getPackagename());
 		playdata.setTitle(data.getTitle());
 		playdata.setPlaytime(data.getPlaytime());
-		playdata.setVersion(data.getVersion());
+		playdata.setAppversion(data.getVersion());
 		// 보상가능
 		playdata.setState("P001001");
 		// 플레이 시간 타입 현재는 이거밖에 없음.
