@@ -19,7 +19,6 @@
 			 IDX
 			,MEMBER_IDX
 			,PACKAGENAME
-			,VERSION
 			,STATE
 			,REWARD
 			,TXNUMBER
@@ -41,7 +40,6 @@
 				,TYPECODE
 				,PLAYTIME
 				,STATE
-				,VERSION
 				,MODIFY_MEMBER_ID
 				,REGISTDATE
 				,MODIFYDATE
@@ -53,7 +51,6 @@
 				,#{title}
 				,#{typecode}
 				,#{playtime}
-				,#{version}
 				,#{state}
 				,#{modify_member_id}
 				,#{registdate}
@@ -106,7 +103,6 @@
 					IFNULL(PLD.PACKAGENAME, MTS.SOURCENAME) AS PACKAGENAME
 					,MTP.AMOUNT AS REWARD
 					,IFNULL(PLD.ALTTITLE, MTS.SOURCENAME) AS ALTTITLE
-					, PLD.VERSION		AS VERSION
 					,IFNULL(PLD.STATE,'P001002') AS STATE
 					,IFNULL(PLD.PLAYTIME, '0') AS PLAYTIME
 					,MTP.REGISTDATE AS REGISTDATE

@@ -130,6 +130,8 @@ public class GamedataService {
 			
 			for (TemporalPlayData gamdata : gamePlaydatalist) // 화면에서 올라온 데이터
 			{
+				
+			
 				// 오늘이 아니면 전부 불인정
 				if( !dateUtil.isToday(new Date()) )
 				{
@@ -183,6 +185,8 @@ public class GamedataService {
 					data.setValid("false");
 				}
 			}
+			
+			
 		} else {
 			return null;
 		}
@@ -196,7 +200,6 @@ public class GamedataService {
 		playdata.setPackagename(data.getPackagename());
 		playdata.setTitle(data.getTitle());
 		playdata.setPlaytime(data.getPlaytime());
-		playdata.setVersion(data.getVersion());
 		// 보상가능
 		playdata.setState("P001001");
 		// 플레이 시간 타입 현재는 이거밖에 없음.
