@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mithril.vo.member.Member;
 import io.mithril.vo.mtp.MtpHistory;
 import io.mithril.vo.playdata.PlayData;
+import io.mithril.vo.playdata.Playhistory;
 import io.mithril.vo.playdata.Playstoreappinfo;
 import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithrilcoin.api.biz.gamedata.mapper.GamedataMapper;
@@ -128,7 +129,7 @@ public class GamedataService {
 		{
 			ArrayList<TemporalPlayData> todayHistoryList = gamedatamapper.selectTodayPlayDataHistory(member_idx);
 			HashMap<String, ArrayList<TemporalPlayData>> todayHistoryMap = new HashMap<>();
-			
+			// get today data list
 			for(TemporalPlayData todayData : todayHistoryList)
 			{
 				if(!todayHistoryMap.containsKey(todayData.getPackagename()))
@@ -138,10 +139,11 @@ public class GamedataService {
 					todayHistoryMap.put(todayData.getPackagename(), list);
 				}
 			}
-			
+			// 오늘 플레이한 전체 내역
 			for(TemporalPlayData gamedata : gamePlaydatalist)
 			{
 				String packagename = gamedata.getPackagename();
+				// 오늘 게임한 내역에 이미 있는 패키지라면.
 				if(todayHistoryMap.containsKey(packagename))
 				{
 					ArrayList<TemporalPlayData> list = todayHistoryMap.get(packagename);
@@ -151,6 +153,9 @@ public class GamedataService {
 								!data.getEndtime().equals(gamedata.getEndtime()))
 						{
 							// insert gamedata history
+						//	gamedata  = insertPlayData(gamedata, member_idx, email);
+							insertPlayhistory(gamedata);
+							
 						}
 					}
 				}
@@ -271,6 +276,16 @@ public class GamedataService {
 		data.setState(playdata.getState());
 
 		return data;
+	}
+	private Playhistory insertPlayhistory(TemporalPlayData playdata)
+	{
+		Playhistory history = new Playhistory();
+		history.setPlaydata_idx(playdata.getIdx());
+		history.setStarttime(playdata.getStarttime());
+		history.setEndtime(playdata.getEndtime());
+		gamedatamapper.insertPlayhistory(history);
+		
+		return history;
 	}
 
 	private ArrayList<TemporalPlayData> getGameAppData(ArrayList<TemporalPlayData> dataList) {

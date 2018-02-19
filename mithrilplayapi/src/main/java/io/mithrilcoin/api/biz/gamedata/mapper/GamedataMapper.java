@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import io.mithril.vo.playdata.PlayData;
+import io.mithril.vo.playdata.Playhistory;
 import io.mithril.vo.playdata.Playstoreappinfo;
 import io.mithril.vo.playdata.TemporalPlayData;
 
@@ -26,4 +27,6 @@ public interface GamedataMapper {
 	public ArrayList<PlayData> selectTotalPlaydataNopage(@Param("member_idx") long member_idx);
 
 	public ArrayList<TemporalPlayData> selectTodayPlayDataHistory(@Param("member_idx") long member_idx);
+	
+	public int insertPlayhistory(Playhistory playhistory);
 }

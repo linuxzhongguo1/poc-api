@@ -34,14 +34,14 @@
 	</select>
 	<select id="selectTodayPlayDataHistory" parameterType="long" resultType="io.mithril.vo.playdata.TemporalPlayData">
 	   <![CDATA[ SELECT 
-			 PLD.IDX
-			,PLD.MEMBER_IDX
-			,PLD.PACKAGENAME
-			,PLD.APPVERSION
-			,PLD.STATE
-			,PLD.REWARD
-			,PLD.TXNUMBER
-			,PLD.TITLE
+			 PLD.IDX	AS IDX 
+			,PLD.MEMBER_IDX	AS MEMBER_IDX
+			,PLD.PACKAGENAME	AS PACKAGENAME
+			,PLD.APPVERSION	AS APPVERSION
+			,PLD.STATE	AS STATE
+			,PLD.REWARD	AS REWARD
+			,PLD.TXNUMBER	AS TXNUMBER
+			,PLD.TITLE	AS TITLE
 			,PLH.REGISTDATE AS PLAYDATE
 			,PLH.STARTTIME AS STARTTIME
 			,PLH.ENDTIME	AS ENDTIME
@@ -141,4 +141,21 @@
 				AND MTP.SEQUENCE = 1
 			ORDER BY REGISTDATE DESC
 	</select>
+	<insert id="insertPlayhistory" parameterType="io.mithril.vo.playdata.Playhistory" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO PLAYHISTORY
+			(
+				 PLAYDATA_IDX
+				,STARTTIME
+				,ENDTIME
+				,REGISTDATE
+			)
+			VALUES
+			(
+				#{playdata_idx}
+				,#{starttime}
+				,#{endtime}
+				,NOW()
+			)
+		
+	</insert>
 </mapper>
