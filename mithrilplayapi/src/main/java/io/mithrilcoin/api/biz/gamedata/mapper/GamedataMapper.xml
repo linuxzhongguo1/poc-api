@@ -19,7 +19,7 @@
 			 IDX
 			,MEMBER_IDX
 			,PACKAGENAME
-			,APPVERSION
+			,VERSION
 			,STATE
 			,REWARD
 			,TXNUMBER
@@ -37,7 +37,7 @@
 			 PLD.IDX	AS IDX 
 			,PLD.MEMBER_IDX	AS MEMBER_IDX
 			,PLD.PACKAGENAME	AS PACKAGENAME
-			,PLD.APPVERSION	AS APPVERSION
+			,PLD.VERSION	AS VERSION
 			,PLD.STATE	AS STATE
 			,PLD.REWARD	AS REWARD
 			,PLD.TXNUMBER	AS TXNUMBER
@@ -59,10 +59,11 @@
 				 MEMBER_IDX
 				,PACKAGENAME
 				,TITLE
+				,ALTTITLE
 				,TYPECODE
 				,PLAYTIME
 				,STATE
-				,APPVERSION
+				,VERSION
 				,MODIFY_MEMBER_ID
 				,REGISTDATE
 				,MODIFYDATE
@@ -72,9 +73,10 @@
 				 #{member_idx}
 				,#{packagename}
 				,#{title}
+				,#{alttitle}
 				,#{typecode}
 				,#{playtime}
-				,#{appversion}
+				,#{version}
 				,#{state}
 				,#{modify_member_id}
 				,#{registdate}
@@ -127,7 +129,7 @@
 					IFNULL(PLD.PACKAGENAME, MTS.SOURCENAME) AS PACKAGENAME
 					,MTP.AMOUNT AS REWARD
 					,IFNULL(PLD.ALTTITLE, MTS.SOURCENAME) AS ALTTITLE
-					, PLD.APPVERSION		AS APPVERSION
+					, PLD.VERSION		AS VERSION
 					,IFNULL(PLD.STATE,'P001002') AS STATE
 					,IFNULL(PLD.PLAYTIME, '0') AS PLAYTIME
 					,MTP.REGISTDATE AS REGISTDATE
@@ -154,7 +156,7 @@
 				#{playdata_idx}
 				,#{starttime}
 				,#{endtime}
-				,NOW()
+				,#{registdate}
 			)
 		
 	</insert>
