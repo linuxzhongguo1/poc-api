@@ -28,5 +28,7 @@ public interface GamedataMapper {
 
 	public ArrayList<TemporalPlayData> selectTodayPlayDataHistory(@Param("member_idx") long member_idx);
 	
+	public ArrayList<TemporalPlayData> selectPlayDataHistory(@Param("member_idx") long member_idx, @Param("playdata_idx") long play_idx);
+	
 	public int insertPlayhistory(Playhistory playhistory);
 }

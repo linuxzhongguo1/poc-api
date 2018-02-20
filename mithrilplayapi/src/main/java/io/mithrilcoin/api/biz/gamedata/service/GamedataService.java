@@ -1,5 +1,9 @@
 package io.mithrilcoin.api.biz.gamedata.service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -149,12 +153,20 @@ public class GamedataService {
 					.list2MapArrayValue(todayHistoryList, "packagename");
 			HashMap<String, TemporalPlayData> todayPlayMap = collectionUtil.list2MapSingleValue(todayPlaydatalist,
 					"packagename");
-
+			LocalDateTime localDateTime = LocalDateTime.of(LocalDate.now(), LocalTime.MIDNIGHT);
+			Date midnight = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant());
+			long todaylong = midnight.getTime();
+			// 24 * 60 * 60 = 86400
+			long tommorowlong = todaylong + 86400000;
+			
 			// 오늘 플레이한 전체 내역
 			for (TemporalPlayData gamedata : gamePlaydatalist) {
 				// 시작 시간과 끝시간이 모두 숫자로 여야 함미다.
+				// 게임 종료 시간을 기준으로 오늘 00:00 부터 익일 00:00:00 전까지  
 				if (!Pattern.matches("^[0-9]+$", gamedata.getStarttime())
-						|| !Pattern.matches("^[0-9]+$", gamedata.getEndtime())) {
+						|| !Pattern.matches("^[0-9]+$", gamedata.getEndtime())
+						|| todaylong >= Long.parseLong(gamedata.getEndtime())
+						|| tommorowlong <= Long.parseLong(gamedata.getEndtime())) {
 					continue;
 				}
 
@@ -282,15 +294,25 @@ public class GamedataService {
 		meber.setEmail(userEmail);
 		ArrayList<Member> memberlist = memberMapper.selectMember(meber);
 
-		// 오늘이 아니면 전부 불인정
-		if (!dateUtil.isToday(playdata.getPlaydate())) {
-			playdata.setValid("false");
-			return playdata;
-		}
-
 		if (memberlist.size() > 0) {
 			Member findmember = memberlist.get(0);
 			long member_idx = findmember.getIdx();
+			
+			ArrayList<TemporalPlayData> todayHistoryList = gamedatamapper.selectPlayDataHistory(member_idx , playdata.getIdx());
+			long rewardtime = 0;
+			for(TemporalPlayData historyData : todayHistoryList)
+			{
+				if(dateUtil.isToday(historyData.getEndtime()))
+				{
+					rewardtime += Long.parseLong(historyData.getEndtime()) - Long.parseLong(historyData.getStarttime());
+				}
+			}
+			if( rewardtime < VALID_PLAY_TIME || playdata.getPlaytime() != rewardtime)
+			{
+				playdata.setValid("false");
+				return playdata;
+			}
+			
 			ArrayList<TemporalPlayData> todayList = gamedatamapper.selectTodayPlayData(member_idx);
 			int count = 0;
 			for (TemporalPlayData data : todayList) {

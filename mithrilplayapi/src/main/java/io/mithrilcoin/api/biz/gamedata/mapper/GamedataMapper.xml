@@ -24,6 +24,7 @@
 			,REWARD
 			,TXNUMBER
 			,TITLE
+			,ALTTITLE
 			,REGISTDATE AS PLAYDATE
 		FROM PLAYDATA
 		WHERE 
@@ -53,6 +54,30 @@
 			ORDER BY REWARD DESC
 		]]> 
 	</select>
+	<select id="selectPlayDataHistory" parameterType="long" resultType="io.mithril.vo.playdata.TemporalPlayData">
+	   <![CDATA[ SELECT 
+			 PLD.IDX	AS IDX 
+			,PLD.MEMBER_IDX	AS MEMBER_IDX
+			,PLD.PACKAGENAME	AS PACKAGENAME
+			,PLD.VERSION	AS VERSION
+			,PLD.STATE	AS STATE
+			,PLD.REWARD	AS REWARD
+			,PLD.TXNUMBER	AS TXNUMBER
+			,PLD.TITLE	AS TITLE
+			,PLH.REGISTDATE AS PLAYDATE
+			,PLH.STARTTIME AS STARTTIME
+			,PLH.ENDTIME	AS ENDTIME
+		FROM PLAYDATA PLD, PLAYHISTORY PLH
+		WHERE 
+			MEMBER_IDX =  #{member_idx}
+			AND PLD.IDX = #{playdata_idx}
+			AND PLD.IDX = PLH.PLAYDATA_IDX
+		    AND ( PLH.REGISTDATE >= UNIX_TIMESTAMP(CURDATE()) * 1000 AND PLH.REGISTDATE < UNIX_TIMESTAMP(DATE_ADD(CURDATE(), INTERVAL 1 DAY)) * 1000) 
+			ORDER BY REWARD DESC
+		]]> 
+	</select>
+	
+	
 	<insert id="insertPlayData" parameterType="io.mithril.vo.playdata.PlayData" useGeneratedKeys="true" keyProperty="idx">
 		INSERT INTO PLAYDATA
 			(
@@ -76,8 +101,8 @@
 				,#{alttitle}
 				,#{typecode}
 				,#{playtime}
-				,#{version}
 				,#{state}
+				,#{version}
 				,#{modify_member_id}
 				,#{registdate}
 				,#{modifydate}
