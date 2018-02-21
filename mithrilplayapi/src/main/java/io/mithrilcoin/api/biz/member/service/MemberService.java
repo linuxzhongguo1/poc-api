@@ -44,8 +44,19 @@ public class MemberService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MemberInfo insertMember(MemberInfo signUpMember) throws MithrilPlayException {
 		logger.info("io.mithrilcoin.api.biz.member.service insertMember ");
-		signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
-	//	signUpMember.setPassword(signUpMember.getPassword());
+		
+//		// password 공백 아닐 경우 
+//		if( signUpMember.getPassword() != null && signUpMember.getPassword() != "")
+//		{
+//			signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
+//		}//공백인데 SNS 정보가 없을 경우 
+//		else if(signUpMember.getMembersocial() == null)
+//		{
+//			logger.error("insertMember : " + MithrilPlayExceptionCode.INVALID_PARAMETER.getMessage());
+//			signUpMember.setIdx(-1);
+//			return signUpMember;
+//		}
+		//	signUpMember.setPassword(signUpMember.getPassword());
 		ArrayList<Member> memberlist = memberMapper.selectMember(signUpMember);
 		// 이미 회원가입된 사용자
 		if (memberlist.size() > 0) {
@@ -54,7 +65,6 @@ public class MemberService {
 			// MithrilPlayException(MithrilPlayExceptionCode.RESULT_ALREADY_MEMBER);
 			signUpMember.setIdx(-1);
 			return signUpMember;
-
 		}
 		// 미인증 회원으로 최초 등록
 		signUpMember.setState("M001001");
