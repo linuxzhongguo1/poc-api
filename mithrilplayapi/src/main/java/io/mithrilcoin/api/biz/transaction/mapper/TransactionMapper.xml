@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.biz.transaction.mapper.TransactionMapper">
+	<insert id="insertTransaction" parameterType="io.mithril.vo.blockchain.Transaction" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO TRANSACTION
+			(
+				 MEMBER_IDX
+				,TXNUMBER
+				,TXTYPE
+				,REGISTDATE
+			)
+			VALUES
+			(
+				#{member_idx}
+				,#{txnumber}
+				,#{txtype}
+				,#{registdate}
+			)
+	</insert>
+	<select id="selectTransactionNopage" parameterType="io.mithril.vo.blockchain.Transaction" resultType="io.mithril.vo.blockchain.Transaction">
+		SELECT 
+			 IDX
+			,MEMBER_IDX
+			,TXNUMBER
+			,TXTYPE
+			,REGISTDATE
+		FROM TRANSACTION
+		WHERE
+			MEMBER_IDX = #{member_idx}
+			<if test="txnumber != null and txnumber != ''">
+			AND	TXNUMBER = #{txnumber}
+			</if>
+			<if test="txtype != null and txtype != ''">
+			AND	TXTYPE = #{txtype}
+			</if>
+	</select>
+</mapper>
