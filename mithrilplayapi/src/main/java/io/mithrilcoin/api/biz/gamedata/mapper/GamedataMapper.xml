@@ -53,8 +53,8 @@
 				,#{title}
 				,#{typecode}
 				,#{playtime}
-				,#{version}
 				,#{state}
+				,#{version}
 				,#{modify_member_id}
 				,#{registdate}
 				,#{modifydate}
