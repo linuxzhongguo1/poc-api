@@ -14,8 +14,8 @@ import io.mithril.vo.blockchain.Transaction;
 import io.mithrilcoin.api.biz.transaction.service.TransactionService;
 
 @RestController
-@RequestMapping("/trans")
-public class TransactionCotroller {
+@RequestMapping("/transaction")
+public class TransactionController {
 
 	@Autowired
 	private TransactionService transactionService;

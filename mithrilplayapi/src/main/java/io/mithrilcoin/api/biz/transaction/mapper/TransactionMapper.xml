@@ -5,6 +5,7 @@
 		INSERT INTO TRANSACTION
 			(
 				 MEMBER_IDX
+				,RELATEIDX
 				,TXNUMBER
 				,TXTYPE
 				,REGISTDATE
@@ -12,6 +13,7 @@
 			VALUES
 			(
 				#{member_idx}
+				,#{relateidx}
 				,#{txnumber}
 				,#{txtype}
 				,#{registdate}
@@ -21,6 +23,7 @@
 		SELECT 
 			 IDX
 			,MEMBER_IDX
+			,RELATEIDX
 			,TXNUMBER
 			,TXTYPE
 			,REGISTDATE
