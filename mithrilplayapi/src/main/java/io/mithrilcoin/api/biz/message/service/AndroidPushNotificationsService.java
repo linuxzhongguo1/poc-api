@@ -40,10 +40,7 @@ public class AndroidPushNotificationsService implements MessageService{
 			logger.info("AndroidPushNotificationsService : sendMessage to " + message.getReceiver());
 			if( message.getReceiver() == null) // 전체 전송 
 			{
-				//1 목록 추출 
-				// N 건 씩 끊어서 인서트 
-				// N 건 비동기 푸쉬 전송 
-				// ??? 어떻게 업데이트를 묶음 단위로 처리 할까 비동기 콜백 때 마다 Update 하면 DB 죽는다. ( 20 만건 이라고 생각해봐.. UPdate 20만번)
+
 			}
 			else // 단건 전송 
 			{
