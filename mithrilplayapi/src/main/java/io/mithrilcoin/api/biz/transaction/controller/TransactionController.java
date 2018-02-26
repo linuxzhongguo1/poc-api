@@ -27,7 +27,7 @@ public class TransactionController {
 	}
 	
 	@GetMapping("/select/listnopage/{accessPoint}/{idx}")
-	public ArrayList<Transaction> selectListNopage(@RequestBody Transaction transaction)
+	public ArrayList<Transaction> selectListNopage(Transaction transaction)
 	{
 		return transactionService.selectTransactionListNopage(transaction);
 	}
