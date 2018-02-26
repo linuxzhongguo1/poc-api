@@ -13,7 +13,7 @@ public class PlaydataComparer implements Comparator<TemporalPlayData> {
 
 		if (gap == 0) {
 			if (p1.getReward() > 0) {
-				long time = Long.parseLong(p2.getStarttime()) - Long.parseLong(p1.getStarttime());
+				long time = Long.parseLong(p2.getPlaydate()) - Long.parseLong(p1.getPlaydate());
 				return (int) time;
 			} else {
 				int p1ValidGap = 0;
