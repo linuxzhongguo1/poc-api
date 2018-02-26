@@ -333,6 +333,7 @@ public class GamedataService {
 					// 리워드 주고
 					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx());
 					data.setAlttitle(playdata.getAlttitle());
+					data.setPlaytime(rewardtime);
 					updatePlayData(data, member_idx, userEmail, history);
 					playdata.setReward(history.getAmount());
 					playdata.setState("P001002");
