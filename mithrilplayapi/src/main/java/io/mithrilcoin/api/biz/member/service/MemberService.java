@@ -15,6 +15,7 @@ import io.mithril.vo.member.Member;
 import io.mithril.vo.member.MemberDetail;
 import io.mithril.vo.member.MemberInfo;
 import io.mithril.vo.member.MemberListVo;
+import io.mithril.vo.member.MemberSocial;
 import io.mithril.vo.member.UserInfo;
 import io.mithrilcoin.api.biz.gamedata.service.GamedataService;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
@@ -44,75 +45,131 @@ public class MemberService {
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MemberInfo insertMember(MemberInfo signUpMember) throws MithrilPlayException {
 		logger.info("io.mithrilcoin.api.biz.member.service insertMember ");
+	
+		//SNS 회원가입이여도 패스워드는 무조건 존재해야 함. 
+		if( signUpMember.getPassword() == null || signUpMember.getPassword().equals(""))
+		{
+			logger.error("insertMember : " + MithrilPlayExceptionCode.INVALID_PARAMETER.getMessage());
+			signUpMember.setIdx(0);
+			return signUpMember;
+		}
 		signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
-//		// password 공백 아닐 경우 
-//		if( signUpMember.getPassword() != null && signUpMember.getPassword() != "")
-//		{
-//			signUpMember.setPassword(hashUtil.getHashedString(signUpMember.getPassword()));
-//		}//공백인데 SNS 정보가 없을 경우 
-//		else if(signUpMember.getMembersocial() == null)
-//		{
-//			logger.error("insertMember : " + MithrilPlayExceptionCode.INVALID_PARAMETER.getMessage());
-//			signUpMember.setIdx(-1);
-//			return signUpMember;
-//		}
-		//	signUpMember.setPassword(signUpMember.getPassword());
 		ArrayList<Member> memberlist = memberMapper.selectMember(signUpMember);
 		// 이미 회원가입된 사용자
 		if (memberlist.size() > 0) {
-			logger.error("insertMember : " + MithrilPlayExceptionCode.RESULT_ALREADY_MEMBER.getMessage());
-			// throw new
-			// MithrilPlayException(MithrilPlayExceptionCode.RESULT_ALREADY_MEMBER);
-			signUpMember.setIdx(-1);
-			return signUpMember;
+			// SNS 정보 있음
+			if(signUpMember.getMembersocial() != null)
+			{
+				MemberSocial sns = signUpMember.getMembersocial();
+				Member findMember = memberlist.get(0);
+				sns.setMember_idx(findMember.getIdx());
+				MemberSocial result = memberMapper.selectMembersocial(sns);
+				//SNS 가입 이력이 있는 경우
+				if( result != null)
+				{
+					logger.error("insertMember : " + MithrilPlayExceptionCode.RESULT_ALREADY_MEMBER.getMessage());
+					signUpMember.setIdx(-1);
+					return signUpMember;
+				}
+				else
+				{
+					//SNS 가입 정보만 처리.
+					memberMapper.insertMemberSocial(sns);
+					signUpMember.setState(findMember.getState());
+					signUpMember.setRatio(findMember.getRatio());
+				
+					String now = dateutil.getUTCNow();
+					signUpMember.setRegistdate(findMember.getRegistdate());
+					signUpMember.setModifydate(findMember.getModifydate());
+					signUpMember.setRecentlogindate(now);
+					signUpMember.setMembersocial(sns);
+					return signUpMember;
+				}
+			}
+			else
+			{
+				logger.error("insertMember : " + MithrilPlayExceptionCode.RESULT_ALREADY_MEMBER.getMessage());
+				signUpMember.setIdx(-1);
+				return signUpMember;
+			}
 		}
-		// 미인증 회원으로 최초 등록
-		signUpMember.setState("M001001");
-		signUpMember.setRatio(1.0f);
-		logger.info("insertMember : memberMapper.insertMember");
-		String now = dateutil.getUTCNow();
-		signUpMember.setRegistdate(now);
-		signUpMember.setModifydate(now);
-		signUpMember.setRecentlogindate(now);
-		
-		memberMapper.insertMember(signUpMember);
-		if (signUpMember.getIdx() > 0) {
-			logger.info("insertMember : memberMapper.insertMember end");
-			Device device = new Device();
-			device.setBrand(signUpMember.getBrand());
-			device.setDeviceid(signUpMember.getDeviceid());
-			device.setMember_idx(signUpMember.getIdx());
-			device.setModel(signUpMember.getModel());
-			device.setRegistdate(now);
-			device.setFcmid(signUpMember.getFcmid());
-			device.setOsversion(signUpMember.getOsversion());
-			device.setUseyn("Y");
-			memberMapper.insertDevice(device);
-			memberMapper.updateNewDevice(device);
-
-			logger.info("insertMember : " + MithrilPlayExceptionCode.SUCCESS.getMessage());
-			return signUpMember;
+		else
+		{
+			// 미인증 회원으로 최초 등록
+			signUpMember.setState("M001001");
+			signUpMember.setRatio(1.0f);
+			logger.info("insertMember : memberMapper.insertMember");
+			String now = dateutil.getUTCNow();
+			signUpMember.setRegistdate(now);
+			signUpMember.setModifydate(now);
+			signUpMember.setRecentlogindate(now);
+			
+			memberMapper.insertMember(signUpMember);
+			if (signUpMember.getIdx() > 0) {
+				logger.info("insertMember : memberMapper.insertMember end");
+				Device device = new Device();
+				device.setBrand(signUpMember.getBrand());
+				device.setDeviceid(signUpMember.getDeviceid());
+				device.setMember_idx(signUpMember.getIdx());
+				device.setModel(signUpMember.getModel());
+				device.setRegistdate(now);
+				device.setFcmid(signUpMember.getFcmid());
+				device.setOsversion(signUpMember.getOsversion());
+				device.setUseyn("Y");
+				memberMapper.insertDevice(device);
+				memberMapper.updateNewDevice(device);
+				// SNS 정보로 회원가입이라면 해당 정보 같이 입력 
+				if(signUpMember.getMembersocial() != null)
+				{
+					MemberSocial sns =  signUpMember.getMembersocial();
+					sns.setMember_idx(signUpMember.getIdx());
+					memberMapper.insertMemberSocial(sns);
+					signUpMember.setMembersocial(sns);
+				}
+				
+				logger.info("insertMember : " + MithrilPlayExceptionCode.SUCCESS.getMessage());
+				return signUpMember;
+			}
 		}
 		logger.error("insertMember : " + MithrilPlayExceptionCode.FAILED_TO_INSERT.getMessage());
 
 		throw new MithrilPlayException(MithrilPlayExceptionCode.FAILED_TO_INSERT);
 	}
 
-	public Member signIn(Member member) {
+	public Member signIn(MemberInfo member) {
 		logger.info("io.mithrilcoin.api.biz.member.service signIn ");
 		ArrayList<Member> memberlist = memberMapper.selectMember(member);
 		if (memberlist.size() > 0) {
 			Member findMember = memberlist.get(0);
 			logger.info("io.mithrilcoin.api.biz.member.service signIn find member : " + findMember.getEmail());
-
-			String sourcePass = hashUtil.getHashedString(member.getPassword());
-			String targetPass = findMember.getPassword();
-			if (sourcePass.equals(targetPass)) {
-				return findMember;
-			} else {
-				// 비번 틀림
-				member.setIdx(-1);
-				return member;
+			
+			//SNS로그인 요청이면 
+			if(member.getMembersocial() != null)
+			{
+				MemberSocial sns = member.getMembersocial();
+				sns.setMember_idx(findMember.getIdx());
+				MemberSocial result = memberMapper.selectMembersocial(sns);
+				if( result != null && result.getTokenid().equals(sns.getTokenid()))
+				{
+					return findMember;
+					
+				}else {
+					// SNS 아이디 틀림
+					member.setIdx(-1);
+					return member;
+				}
+			}
+			else
+			{
+				String sourcePass = hashUtil.getHashedString(member.getPassword());
+				String targetPass = findMember.getPassword();
+				if (sourcePass.equals(targetPass)) {
+					return findMember;
+				} else {
+					// 비번 틀림
+					member.setIdx(-1);
+					return member;
+				}
 			}
 
 		}

@@ -322,6 +322,33 @@
 				cm.cmcode = mem.state
 		<include refid="io.mithrilcoin.api.biz.common.mapper.PagingMapper.POST_PAGE"></include>
 	</select> 
-	
+	<select id="selectMembersocial" resultType="io.mithril.vo.member.MemberSocial" parameterType="io.mithril.vo.member.MemberSocial">
+		SELECT 
+			IDX
+			,MEMBER_IDX
+			,SNSCODE
+			,TOKENID
+			,REGISTDATE
+		FROM MEMBERSOCIAL
+		WHERE
+			MEMBER_IDX = #{member_idx}
+		AND	SNSCODE = #{snscode}
+	</select>
+	<insert id="insertMemberSocial" parameterType="io.mithril.vo.member.MemberSocial" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO MEMBERSOCIAL
+			(
+				MEMBER_IDX
+				,SNSCODE
+				,TOKENID
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{member_idx}
+				,#{snscode}
+				,#{tokenid}
+				,NOW()
+			)
+	</insert>
 	
 </mapper>

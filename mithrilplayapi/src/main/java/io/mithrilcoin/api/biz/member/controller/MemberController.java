@@ -47,7 +47,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/signin/{accessPoint}/{idx}")
-	public Member signin(@RequestBody @Valid Member member, @PathVariable String accessPoint, @PathVariable String idx,
+	public Member signin(@RequestBody @Valid MemberInfo member, @PathVariable String accessPoint, @PathVariable String idx,
 			BindingResult result) {
 		return memberService.signIn(member);
 	}
