@@ -10,6 +10,8 @@
 				,BODY
 				,SENDER
 				,RECEIVER
+				,QUERY
+				,URL
 				,REGISTDATE
 			)
 			VALUES
@@ -20,6 +22,8 @@
 				,#{body}
 				,#{sender}
 				,#{receiver}
+				,#{query}
+				,#{url}
 				,#{registdate}
 			)
 	</insert>
@@ -27,6 +31,9 @@
 		UPDATE MESSAGE
 		SET 
 			STATE = #{state}
+			<if test="body != null and body !=''">
+			, body = #{body}
+			</if>
 		WHERE
 			IDX = #{idx}
 	</update>
@@ -38,6 +45,8 @@
 			,BODY
 			,SENDER
 			,RECEIVER
+			,QUERY
+			,URL
 			,REGISTDATE
 		FROM MESSAGE
 		WHERE 1=1
@@ -55,4 +64,20 @@
 			</if>
 			ORDER BY REGISTDATE DESC
 	</select>
+	<insert id="insertMessageResponse" parameterType="io.mithril.vo.message.Message" useGeneratedKeys="true" keyProperty="idx">
+			INSERT INTO MESSAGERESPONSE
+				(
+					MESSAGE_IDX
+					,RESPONSE
+					,TYPECODE
+					,REGISTDATE
+				)
+			VALUES
+				(
+					#{idx}
+					,#{body}
+					,#{typecode}
+					,#{registdate}
+				)	
+	</insert>
 </mapper>

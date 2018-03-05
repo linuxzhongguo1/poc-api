@@ -2,6 +2,7 @@ package io.mithrilcoin.api.biz.member.mapper;
 
 import java.util.ArrayList;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import io.mithril.vo.member.Account;
@@ -52,5 +53,8 @@ public interface MemberMapper {
 	public MemberSocial selectMembersocial(MemberSocial social);
 	
 	public int insertMemberSocial(MemberSocial social);
+	
+	public ArrayList<Device> selectDeviceFcmId(@Param("pagecount") int pagecount,
+			@Param("size") int size, @Param("startidx") int idx);
 	
 }

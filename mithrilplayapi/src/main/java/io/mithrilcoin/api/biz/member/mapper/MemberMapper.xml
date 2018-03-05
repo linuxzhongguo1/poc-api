@@ -237,6 +237,18 @@
 			</if>
 			ORDER BY REGISTDATE ASC
 	</select>
+	
+	<select id="selectDeviceFcmId" parameterType="int" resultType="io.mithril.vo.member.Device">
+			SELECT 
+				FCMID
+				,USEYN
+			FROM DEVICE
+			WHERE
+				USEYN = 'Y'
+			AND IDX > #{startidx}
+			LIMIT #{pagecount}, #{size}
+	</select>
+	
 	<select id="selectMemberDetail" parameterType="io.mithril.vo.member.MemberDetail" resultType="io.mithril.vo.member.MemberDetail">
 			SELECT 
 				IDX

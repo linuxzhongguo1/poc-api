@@ -1,12 +1,13 @@
 package io.mithrilcoin.api.config.rest;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowire;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.env.Environment;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
+import org.springframework.http.client.Netty4ClientHttpRequestFactory;
+import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
-
 
 /**
  * 인터페이스 통신 rest api configuration class
@@ -14,14 +15,22 @@ import org.springframework.web.client.RestTemplate;
  */
 @Configuration
 public class RestApiConfiguration {
-	
+
 	@SuppressWarnings("unused")
-	private RestOperations getRestOperation(int readTimeout){
+	private RestOperations getRestOperation(int readTimeout) {
 		HttpComponentsClientHttpRequestFactory factory = new HttpComponentsClientHttpRequestFactory();
 		factory.setConnectTimeout(1000);
 		factory.setReadTimeout(readTimeout);
 		RestTemplate restTemplate = new RestTemplate(factory);
 		return restTemplate;
 	}
+
+//	@Bean(name="asyncRestTemplate", autowire=Autowire.BY_NAME)
+//	public AsyncRestTemplate asyncRestTemplate() {
+//		AsyncRestTemplate asyncRestTemplate = new AsyncRestTemplate();
+//		asyncRestTemplate.setAsyncRequestFactory(new Netty4ClientHttpRequestFactory());
+//		return asyncRestTemplate;
+//
+//	}
 
 }

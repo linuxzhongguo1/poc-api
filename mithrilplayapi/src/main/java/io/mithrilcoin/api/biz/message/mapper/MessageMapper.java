@@ -14,5 +14,7 @@ public interface MessageMapper {
 	public int updateMessage(Message message);
 
 	public ArrayList<Message> selectMessage(Message message);
+	
+	public int insertMessageResponse(Message message);
 
 }

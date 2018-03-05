@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.mithril.vo.message.Message;
 import io.mithrilcoin.api.biz.message.service.MessageService;
+import io.mithrilcoin.api.biz.message.service.ResponseMessageService;
 
 @RestController
 @RequestMapping("/message")
@@ -22,6 +23,10 @@ public class MessageController {
 	@Autowired
 	@Qualifier("pushService")
 	private MessageService pushService;
+	
+	@Autowired
+	private ResponseMessageService responseService;
+	
 	
 	@PostMapping("/send/{accessPoint}/{idx}")
 	public Message sendMessage(@RequestBody Message message,@PathVariable String accessPoint, @PathVariable String idx)
@@ -38,6 +43,21 @@ public class MessageController {
 		return message;
 	}
 	
+	@PostMapping("/insert/response/{accessPoint}/{idx}")
+	public Message insertResponse(@RequestBody Message message,@PathVariable String accessPoint, @PathVariable String idx)
+	{
+		if( message.getIdx() > 0)
+		{
+			responseService.insertResponse(message);
+		}
+		else
+		{
+			message.setIdx(-1);
+			return message;
+		}
+		
+		return message;
+	}
 	
 	
 //	

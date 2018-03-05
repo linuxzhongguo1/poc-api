@@ -7,4 +7,5 @@ public interface MessageService {
 	public Message sendMessage(Message message);
 	
 	public boolean isValidRequest(Message message);
+	
 }
