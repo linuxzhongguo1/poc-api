@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.mithrilcoin.api.biz.rate.mapper.RateMapper">
+	<insert id="insertMemberrate" parameterType="io.mithril.vo.rate.Memberrate" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO MEMBERRATE
+			(
+				RATE_IDX
+				,MEMBER_IDX
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{rate_idx}
+				,#{member_idx}
+				,#{registdate}
+			)
+	</insert>
+	<insert id="insertRatehistory" parameterType="io.mithril.vo.rate.Ratehistory" useGeneratedKeys="true" keyProperty="idx">
+		INSERT INTO RATEHISTORY
+			(
+				 MEMBER_IDX
+				,AMOUNT
+				,CURRENTAMOUNT
+				,TYPECODE
+				,REGISTDATE
+			)
+			VALUES
+			(
+				 #{member_idx}
+				,#{amount}
+				,#{currentamount}
+				,#{typecode}
+				,#{registdate}
+			)
+	</insert>
+	<select id="selectRatelist" resultType="io.mithril.vo.rate.Rate">
+		SELECT 
+		 	NAME
+		   ,REWARD
+		   ,RATING
+		   ,DEPOSITRATE
+		   ,FEERATE
+		   ,UPRATEIDX
+		   ,DOWNRATEIDX
+		   ,FOLLOWERYN
+		   ,TYPECODE
+		   ,MINMTP
+		   ,MINGAME
+		   ,MINAVGPLAYTIME
+		   ,MINPLAYTIME
+		   ,REGISTDATE
+		   ,MODIFYDATE
+		   ,MODIFYID
+	   FROM RATE
+	</select>
+	<select id="selectRateByName" parameterType="String" resultType="io.mithril.vo.rate.Rate">
+		SELECT 
+			NAME
+		   ,REWARD
+		   ,RATING
+		   ,DEPOSITRATE
+		   ,FEERATE
+		   ,UPRATEIDX
+		   ,DOWNRATEIDX
+		   ,FOLLOWERYN
+		   ,TYPECODE
+		   ,MINMTP
+		   ,MINGAME
+		   ,MINAVGPLAYTIME
+		   ,MINPLAYTIME
+		   ,REGISTDATE
+		   ,MODIFYDATE
+		   ,MODIFYID
+		 FROM RATE
+		 WHERE 
+		 	 NAME = #{name}
+	</select>
+	<select id="selectMemberrateByMemberIdx" parameterType="Long" resultType="io.mithril.vo.rate.Memberrate">
+		SELECT 
+			 IDX
+			,RATE_IDX
+			,MEMBER_IDX
+			,REGISTDATE
+		FROM MEMBERRATE
+		WHERE 
+			MEMBER_IDX = #{member_idx}
+	</select>
+	<select id="selectLastMemberrateByMemberIdx" parameterType="Long" resultType="io.mithril.vo.rate.Memberrate">
+		SELECT 
+		 	 IDX
+			,RATE_IDX
+			,MEMBER_IDX
+			,REGISTDATE
+		FROM MEMBERRATE
+		WHERE 
+			MEMBER_IDX = #{member_idx}
+		ORDER BY IDX DESC LIMIT 1
+	</select>
+	<select id="selectLastRatehistoryByMemberIdx" parameterType="Long" resultType="io.mithril.vo.rate.Ratehistory">
+		SELECT 
+			IDX
+			,MEMBER_IDX
+			,AMOUNT
+			,CURRENTAMOUNT
+			,TYPECODE
+			,REGISTDATE
+		FROM RATEHISTORY
+		WHERE 
+			MEMBER_IDX = #{member_idx}
+		ORDER BY IDX DESC LIMIT 1
+	</select>
+</mapper>

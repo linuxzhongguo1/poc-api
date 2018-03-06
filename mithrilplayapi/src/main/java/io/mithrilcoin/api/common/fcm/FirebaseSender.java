@@ -4,13 +4,10 @@ import java.util.ArrayList;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.client.AsyncClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.Netty4ClientHttpRequestFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
@@ -18,10 +15,8 @@ import org.springframework.web.client.RestTemplate;
 
 import com.google.gson.Gson;
 
-import io.mithril.vo.message.FCMMessage;
 import io.mithrilcoin.api.biz.message.handler.AsyncRequestInterceptor;
 import io.mithrilcoin.api.biz.message.handler.HeaderRequestInterceptor;
-import io.mithrilcoin.api.biz.message.service.MailService;
 
 public class FirebaseSender {
 
@@ -75,7 +70,9 @@ public class FirebaseSender {
 			logger.info("FCM Result : "+ result.getBody());
 			
 		}, ex -> logger.error(ex.getMessage()));
-
+		
+		
+	
 	}
 	
 	
