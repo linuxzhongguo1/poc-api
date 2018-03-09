@@ -37,6 +37,7 @@
 		SELECT 
 		 	NAME
 		   ,REWARD
+		   ,RPREWARD
 		   ,RATING
 		   ,DEPOSITRATE
 		   ,FEERATE
@@ -57,6 +58,7 @@
 		SELECT 
 			NAME
 		   ,REWARD
+		   ,RPREWARD
 		   ,RATING
 		   ,DEPOSITRATE
 		   ,FEERATE
@@ -109,4 +111,7 @@
 			MEMBER_IDX = #{member_idx}
 		ORDER BY IDX DESC LIMIT 1
 	</select>
+	<select id=""></select>
+	
+	
 </mapper>

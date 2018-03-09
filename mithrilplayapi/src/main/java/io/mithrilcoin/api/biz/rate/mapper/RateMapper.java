@@ -25,4 +25,6 @@ public interface RateMapper {
 	
 	public Ratehistory selectLastRatehistoryByMemberIdx(long member_idx);	
 	
+//	public long selectRank()
+	
 }
