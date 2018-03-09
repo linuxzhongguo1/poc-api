@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,6 +45,7 @@ public class MemberService {
 
 	// 회원 가입
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	@CacheEvict("TotalMember")
 	public MemberInfo insertMember(MemberInfo signUpMember) throws MithrilPlayException {
 		logger.info("io.mithrilcoin.api.biz.member.service insertMember ");
 	
@@ -332,5 +335,11 @@ public class MemberService {
 		
 		return list;
 	}
+	@Cacheable("TotalMember")
+	public long selectTotalMemberCount()
+	{
+		return memberMapper.selectTotalMemberCount();
+	}
+	
 
 }

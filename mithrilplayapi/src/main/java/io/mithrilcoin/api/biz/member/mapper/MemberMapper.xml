@@ -362,5 +362,7 @@
 				,NOW()
 			)
 	</insert>
-	
+	<select id="selectTotalMemberCount" resultType="Long">
+		SELECT COUNT(1) FROM MEMBER
+	</select>
 </mapper>

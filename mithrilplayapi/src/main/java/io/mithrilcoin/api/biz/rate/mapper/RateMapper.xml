@@ -111,7 +111,18 @@
 			MEMBER_IDX = #{member_idx}
 		ORDER BY IDX DESC LIMIT 1
 	</select>
-	<select id=""></select>
+	<select id="selectRankgrade" parameterType="Long" resultType="Long">
+		SELECT COUNT(1)
+			FROM
+			(  
+			  SELECT 
+		  	 		 MAX(IDX)
+			  	FROM RATEHISTORY
+		  		WHERE 
+		  			CURRENTAMOUNT <![CDATA[>=]]> #{amount}
+					 GROUP BY MEMBER_IDX
+	 	) RATE			 
+	</select>
 	
 	
 </mapper>

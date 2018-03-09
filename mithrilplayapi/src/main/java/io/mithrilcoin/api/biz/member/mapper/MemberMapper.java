@@ -57,4 +57,5 @@ public interface MemberMapper {
 	public ArrayList<Device> selectDeviceFcmId(@Param("pagecount") int pagecount,
 			@Param("size") int size, @Param("startidx") int idx);
 	
+	public long selectTotalMemberCount();
 }
