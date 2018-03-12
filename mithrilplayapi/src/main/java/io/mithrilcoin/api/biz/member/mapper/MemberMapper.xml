@@ -344,7 +344,9 @@
 		FROM MEMBERSOCIAL
 		WHERE
 			MEMBER_IDX = #{member_idx}
-		AND	SNSCODE = #{snscode}
+		<if test="snscode != null and snscode != ''">
+			AND	SNSCODE = #{snscode}
+		</if>	
 	</select>
 	<insert id="insertMemberSocial" parameterType="io.mithril.vo.member.MemberSocial" useGeneratedKeys="true" keyProperty="idx">
 		INSERT INTO MEMBERSOCIAL

@@ -59,6 +59,33 @@ public class MtpService {
 		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
 	}
+	/**
+	 * 등급 업 보상 지급 
+	 * @param member_idx
+	 */
+	@CacheEvict(value="MTPCache", key="#member_idx")
+	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
+	public void insertUpgradeReward(long member_idx, long amount)
+	{
+		//가입 보상 100포인트 지급 
+		MtpSource source = new MtpSource();
+		// 가입 보상 기준 
+		source.setTypecode("T003004");
+		ArrayList<MtpSource> sourceList = mtpMapper.selectMtpSource(source);
+		
+		source = sourceList.get(0);
+		
+		
+		MtpHistory mtphistory = new MtpHistory();
+		mtphistory.setMember_idx(member_idx);
+		mtphistory.setAmount(amount);
+		mtphistory.setMtpsource_idx(source.getIdx());
+		mtphistory.setTypecode("T002001");
+		mtphistory.setRegistdate(datetutil.getUTCNow());
+		mtpMapper.insertMtp(mtphistory);
+	}
+	
+	
 	/***
 	 * 게임 데이터 보상 지급 
 	 * @param member_idx

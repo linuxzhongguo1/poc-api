@@ -31,4 +31,10 @@ public interface GamedataMapper {
 	public ArrayList<TemporalPlayData> selectPlayDataHistory(@Param("member_idx") long member_idx, @Param("playdata_idx") long play_idx);
 	
 	public int insertPlayhistory(Playhistory playhistory);
+	
+	public int selectInstalledPlaygame(long member_idx);
+	
+	public double selectTotalPlaytime(long member_idx);
+
+	public double selectAvgPlaytime(long member_idx);
 }

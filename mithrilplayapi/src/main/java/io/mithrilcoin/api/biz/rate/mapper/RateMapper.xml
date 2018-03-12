@@ -123,6 +123,18 @@
 					 GROUP BY MEMBER_IDX
 	 	) RATE			 
 	</select>
-	
+	<select id="selectMemberrate" parameterType="Long" resultType="io.mithril.vo.rate.Memberrate">
+		SELECT 
+		 	 IDX
+			,RATE_IDX
+			,MEMBER_IDX
+			,REGISTDATE
+		FROM MEMBERRATE
+		WHERE 
+			MEMBER_IDX = #{member_idx}
+		<if test="rate_idx gt 0">
+			AND RATE_IDX = #{rate_idx}
+		</if>
+	</select>
 	
 </mapper>

@@ -185,4 +185,16 @@
 			)
 		
 	</insert>
+	<select id="selectInstalledPlaygame" parameterType="Long" resultType="Integer">
+		SELECT COUNT(1) FROM (SELECT IDX FROM PLAYDATA WHERE MEMBER_IDX = #{member_idx} GROUP BY PACKAGENAME) play
+	</select>
+	
+	<select id="selectTotalPlaytime" parameterType="Long" resultType="Double">
+		SELECT SUM(PLAYTIME)/1000/60 FROM PLAYDATA WHERE MEMBER_IDX = #{member_idx}
+	</select>
+	
+	<select id="selectAvgPlaytime" parameterType="Long" resultType="Double">
+		SELECT AVG(PLAYTIME)/1000/60 FROM PLAYDATA WHERE MEMBER_IDX = #{member_idx}
+		AND ( REGISTDATE <![CDATA[<=]]> UNIX_TIMESTAMP(CURDATE()) * 1000 AND REGISTDATE <![CDATA[>=]]>  UNIX_TIMESTAMP(DATE_SUB(CURDATE(), INTERVAL 30 DAY)) * 1000)
+	</select>
 </mapper>

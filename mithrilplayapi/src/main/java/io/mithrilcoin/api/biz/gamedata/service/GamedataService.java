@@ -374,5 +374,19 @@ public class GamedataService {
 		return gamedatamapper.selectTotalPlaydataNopage(member_idx);
 
 	}
+	public int selectInstalledGame(long member_idx)
+	{
+		return gamedatamapper.selectInstalledPlaygame(member_idx);
+	}
+	
+	public int selectTotalPlaytime(long member_idx)
+	{
+		return (int) gamedatamapper.selectTotalPlaytime(member_idx);
+	}
+	
+	public int selectAvgPlaytime(long member_idx)
+	{
+		return (int) gamedatamapper.selectAvgPlaytime(member_idx);
+	}
 
 }

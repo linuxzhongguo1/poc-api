@@ -340,6 +340,11 @@ public class MemberService {
 	{
 		return memberMapper.selectTotalMemberCount();
 	}
-	
+	public MemberSocial selectMemberSocial(long member_idx)
+	{
+		MemberSocial social = new MemberSocial();
+		social.setMember_idx(member_idx);
+		return memberMapper.selectMembersocial(social);
+	}
 
 }
