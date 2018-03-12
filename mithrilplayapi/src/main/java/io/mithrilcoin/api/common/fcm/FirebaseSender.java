@@ -13,15 +13,13 @@ import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.client.AsyncRestTemplate;
 import org.springframework.web.client.RestTemplate;
 
-import com.google.gson.Gson;
-
 import io.mithrilcoin.api.biz.message.handler.AsyncRequestInterceptor;
 import io.mithrilcoin.api.biz.message.handler.HeaderRequestInterceptor;
 
 public class FirebaseSender {
 
 	private AsyncRestTemplate asyncRestTemplate;
-	private Gson gson;
+
 	private String firebase_server_key;
 	private String firebase_api_url;
 	
@@ -40,7 +38,7 @@ public class FirebaseSender {
 		//asyncRestTemplate.setAsyncRequestFactory(new Netty4ClientHttpRequestFactory());
 		
 		asyncRestTemplate.setInterceptors(interceptors);
-		gson = new Gson();
+	
 	}
 
 	public String send(HttpEntity<String> entity) {

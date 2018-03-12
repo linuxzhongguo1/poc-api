@@ -3,8 +3,6 @@ package io.mithrilcoin.api.config.fcm;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.client.Netty4ClientHttpRequestFactory;
-import org.springframework.web.client.AsyncRestTemplate;
 
 import io.mithrilcoin.api.common.fcm.FirebaseSender;
 

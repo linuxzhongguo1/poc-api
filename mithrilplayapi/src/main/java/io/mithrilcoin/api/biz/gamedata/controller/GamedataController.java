@@ -1,6 +1,5 @@
 package io.mithrilcoin.api.biz.gamedata.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
 

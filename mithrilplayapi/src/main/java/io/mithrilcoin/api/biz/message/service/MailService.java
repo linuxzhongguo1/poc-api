@@ -21,6 +21,9 @@ import javax.naming.directory.InitialDirContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,11 +31,6 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mithril.vo.message.Message;
 import io.mithrilcoin.api.biz.message.mapper.MessageMapper;
 import io.mithrilcoin.api.util.DateUtil;
-
-import org.springframework.mail.MailException;
-import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.scheduling.annotation.Async;
 
 @Service("mailService")
 public class MailService implements MessageService {
