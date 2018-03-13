@@ -31,7 +31,7 @@ public class RateInfoService {
 		});
 
 		ratelist.stream().forEach(rate -> {
-			if (rate.getTypecode().equals("D001002")) {
+			if (rate.getTypecode().equals("R001001")) {
 				if (rate.getUprateidx() > 0) {
 					rate.setUprate(redisDataRepository.getData("rate_" + rate.getUprateidx()));
 				}

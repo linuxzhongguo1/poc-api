@@ -12,7 +12,7 @@ import io.mithril.vo.rate.Ratehistory;
 @Repository
 public interface RateMapper {
 	
-	public Memberrate insertMemberrate(Memberrate rate);
+	public int insertMemberrate(Memberrate rate);
 	
 	public ArrayList<Memberrate> selectMemberrateByMemberIdx(long member_idx);
 	
@@ -24,7 +24,7 @@ public interface RateMapper {
 	
 	public Rate selectRateByName(String name);
 	
-	public Ratehistory insertRatehistory(Ratehistory ratehistory);
+	public int insertRatehistory(Ratehistory ratehistory);
 	
 	public Ratehistory selectLastRatehistoryByMemberIdx(long member_idx);	
 	

@@ -21,7 +21,7 @@
 				 MEMBER_IDX
 				,AMOUNT
 				,CURRENTAMOUNT
-				,TYPECODE
+				,STATECODE
 				,REGISTDATE
 			)
 			VALUES
@@ -29,13 +29,14 @@
 				 #{member_idx}
 				,#{amount}
 				,#{currentamount}
-				,#{typecode}
+				,#{statecode}
 				,#{registdate}
 			)
 	</insert>
 	<select id="selectRatelist" resultType="io.mithril.vo.rate.Rate">
 		SELECT 
-		 	NAME
+			IDX
+		   ,NAME
 		   ,REWARD
 		   ,RPREWARD
 		   ,RATING
@@ -43,12 +44,14 @@
 		   ,FEERATE
 		   ,UPRATEIDX
 		   ,DOWNRATEIDX
-		   ,FOLLOWERYN
-		   ,TYPECODE
 		   ,MINMTP
 		   ,MINGAME
 		   ,MINAVGPLAYTIME
 		   ,MINPLAYTIME
+		   ,WIDGETYN
+		   ,AUTHYN
+		   ,FOLLOWERYN
+		   ,TYPECODE
 		   ,REGISTDATE
 		   ,MODIFYDATE
 		   ,MODIFYID
@@ -104,7 +107,7 @@
 			,MEMBER_IDX
 			,AMOUNT
 			,CURRENTAMOUNT
-			,TYPECODE
+			,STATECODE
 			,REGISTDATE
 		FROM RATEHISTORY
 		WHERE 

@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mithril.vo.member.Member;
-import io.mithril.vo.member.UserInfo;
 import io.mithril.vo.rate.MemberRating;
 import io.mithril.vo.rate.Memberrate;
 import io.mithril.vo.rate.Rate;
@@ -68,9 +67,9 @@ public class RateService {
 		// 전체에서 내 백분율
 		long percent = getPercent(grade, totalMember);
 		if (assignRate == null) {
-			assignRate = checkUpDownRate(currentRate, member.getIdx(), percent);
+			assignRate = checkUpDownRate(currentRate, member, percent);
 			// 승급이라면
-			if (assignRate.getIdx() == currentRate.getUprateidx()) {
+			if (assignRate.getIdx() == currentRate.getUprateidx() && currentRate.getUprateidx() > 0) {
 				// 한번도 승급된적 없는 등급이고 해당 승급 보상이 있는 경우.
 				if (rateMapper.selectMemberrate(member.getIdx(), currentRate.getUprateidx()).size() == 0
 						&& assignRate.getReward() > 0) {
@@ -93,7 +92,7 @@ public class RateService {
 		Memberrate memberRate = new Memberrate();
 		memberRate.setMember_idx(member_idx);
 		memberRate.setRate_idx(rate.getIdx());
-		memberRate.setRegistedate(dateutil.getUTCNow());
+		memberRate.setRegistdate(dateutil.getUTCNow());
 		rateMapper.insertMemberrate(memberRate);
 
 		return memberRate;
@@ -120,7 +119,7 @@ public class RateService {
 	 * 
 	 * @return
 	 */
-	private Rate checkUpDownRate(Rate currentRate, long member_idx, long rate) {
+	private Rate checkUpDownRate(Rate currentRate, Member member, long rate) {
 
 		// 등급 조정 대상 인지 확인
 		if (!currentRate.getTypecode().equals("R001001")) {
@@ -139,7 +138,7 @@ public class RateService {
 					Rate uprate = currentRate.getUprate();
 					if (uprate.getRating() > 0 && uprate.getRating() > rate) // 승급 범위 안에 들어 왓는지 확인.
 					{
-						if (rateRequirementCheck(uprate, member_idx)) // 디테일한 기본 조건을 확인
+						if (rateRequirementCheck(uprate, member)) // 디테일한 기본 조건을 확인
 						{
 							return uprate;
 						}
@@ -161,7 +160,7 @@ public class RateService {
 		if (currentRate.getUprateidx() > 0) // 레이팅과 무관하게 다음 승급으로 가는 승급 조건이 있는지 확인.
 		{
 			Rate uprate = currentRate.getUprate();
-			rateRequirementCheck(uprate, member_idx);
+			rateRequirementCheck(uprate, member);
 		}
 
 		return currentRate;
@@ -174,8 +173,9 @@ public class RateService {
 	 * @param member_idx
 	 * @return
 	 */
-	private boolean rateRequirementCheck(Rate uprate, long member_idx) {
+	private boolean rateRequirementCheck(Rate uprate, Member member) {
 
+		long member_idx = member.getIdx();
 		// MTP 보유량 체크
 		if (uprate.getMinmtp() > 0) {
 			if (uprate.getMinmtp() > mtpservice.selectMtpTotal(member_idx).getUsableamount()) {
@@ -204,9 +204,8 @@ public class RateService {
 		// SNS 연동체크
 		// 추가 회원 인증 여부 체크
 		if (uprate.getAuthyn().equals("Y")) {
-			UserInfo info = memberService.selectUserInfo(String.valueOf(member_idx));
 			// 이메일 인증 + 소셜 아이디 (google or else)가 있는 경우
-			if (!info.getState().equals("M001002") || memberService.selectMemberSocial(member_idx) == null) {
+			if (!member.getState().equals("M001002") || memberService.selectMemberSocial(member_idx) == null) {
 				return false;
 			}
 		}
