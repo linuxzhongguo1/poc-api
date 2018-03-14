@@ -19,7 +19,7 @@ import io.mithrilcoin.api.util.DateUtil;
 public class MtpService {
 	@Autowired
 	private MtpMapper mtpMapper;
-	
+
 	@Autowired
 	private DateUtil datetutil;
 
@@ -30,27 +30,26 @@ public class MtpService {
 	}
 
 	public ArrayList<MtpSource> selectMtpSource(MtpSource source) {
-		
+
 		return mtpMapper.selectMtpSource(source);
 	}
-	
+
 	/**
-	 * 가입 보상 지급 
+	 * 가입 보상 지급
+	 * 
 	 * @param member_idx
 	 */
-	@CacheEvict(value="MTPCache", key="#member_idx")
+	@CacheEvict(value = "MTPCache", key = "#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public void insertInviteReward(long member_idx)
-	{
-		//가입 보상 100포인트 지급 
+	public void insertInviteReward(long member_idx) {
+		// 가입 보상 100포인트 지급
 		MtpSource source = new MtpSource();
-		// 가입 보상 기준 
+		// 가입 보상 기준
 		source.setTypecode("T003002");
 		ArrayList<MtpSource> sourceList = mtpMapper.selectMtpSource(source);
-		
+
 		source = sourceList.get(0);
-		
-		
+
 		MtpHistory mtphistory = new MtpHistory();
 		mtphistory.setMember_idx(member_idx);
 		mtphistory.setAmount(source.getAmount());
@@ -59,23 +58,23 @@ public class MtpService {
 		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
 	}
+
 	/**
-	 * 등급 업 보상 지급 
+	 * 등급 업 보상 지급
+	 * 
 	 * @param member_idx
 	 */
-	@CacheEvict(value="MTPCache", key="#member_idx")
+	@CacheEvict(value = "MTPCache", key = "#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public void insertUpgradeReward(long member_idx, long amount)
-	{
-		//가입 보상 100포인트 지급 
+	public void insertUpgradeReward(long member_idx, long amount) {
+		// 가입 보상 100포인트 지급
 		MtpSource source = new MtpSource();
-		// 가입 보상 기준 
+		// 가입 보상 기준
 		source.setTypecode("T003004");
 		ArrayList<MtpSource> sourceList = mtpMapper.selectMtpSource(source);
-		
+
 		source = sourceList.get(0);
-		
-		
+
 		MtpHistory mtphistory = new MtpHistory();
 		mtphistory.setMember_idx(member_idx);
 		mtphistory.setAmount(amount);
@@ -84,42 +83,44 @@ public class MtpService {
 		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
 	}
-	
-	
+
 	/***
-	 * 게임 데이터 보상 지급 
+	 * 게임 데이터 보상 지급
+	 * 
 	 * @param member_idx
 	 */
-	@CacheEvict(value="MTPCache", key="#member_idx")
+	@CacheEvict(value = "MTPCache", key = "#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public MtpHistory insertDataReward(long member_idx, long playdata_idx)
-	{
-		//가입 보상 100포인트 지급 
+	public MtpHistory insertDataReward(long member_idx, long playdata_idx) {
+		// 가입 보상 100포인트 지급
 		MtpSource source = new MtpSource();
-		// 가입 보상 기준 
+		// 가입 보상 기준
 		source.setTypecode("T003003");
 		ArrayList<MtpSource> sourceList = mtpMapper.selectMtpSource(source);
-		
+
 		source = sourceList.get(0);
-		
+
 		MtpHistory mtphistory = new MtpHistory();
 		mtphistory.setMember_idx(member_idx);
-		mtphistory.setAmount(source.getAmount());
+
+		// amount 계산 식 추가.
+		// 계산 변수 가져오기 from cache
+		// mtphistory.setAmount(source.getAmount());
+
 		mtphistory.setMtpsource_idx(source.getIdx());
 		mtphistory.setTypecode("T002001");
 		mtphistory.setPlaydata_idx(playdata_idx);
 		mtphistory.setRegistdate(datetutil.getUTCNow());
 		mtpMapper.insertMtp(mtphistory);
-		
+
 		return mtphistory;
 	}
-	
-	@Cacheable(value="MTPCache",key="#member_idx")
+
+	@Cacheable(value = "MTPCache", key = "#member_idx")
 	public MtpTotal selectMtpTotal(long member_idx) {
 		MtpTotal mtpTotal = mtpMapper.selectMtpTotalByMember(member_idx);
 		mtpTotal.setUsableamount(mtpTotal.getIncomeamount() - mtpTotal.getSpentamount() - mtpTotal.getExpireamount());
 		return mtpTotal;
 	}
-	
-	
+
 }

@@ -30,4 +30,5 @@ public interface RateMapper {
 	
 	public long selectRankgrade(long amount);
 	
+	public int selectRankgradeByGroup(@Param("rate_idx")long rate_idx, @Param("ratepoint")long ratepoint);
 }

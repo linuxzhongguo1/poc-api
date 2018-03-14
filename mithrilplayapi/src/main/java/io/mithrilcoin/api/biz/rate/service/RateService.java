@@ -57,7 +57,6 @@ public class RateService {
 		if (currentMemberRate == null) {
 			assignRate = rateInfoService.getRate(FIRST_RATE);
 			currentMemberRate = insertMemberrate(assignRate, member.getIdx());
-			// int rpPoint, String statecode, int oldAmount, long member_idx
 			currentRateHistory = insertRateHistory(assignRate.getRpreward(), "R002001", 0, member.getIdx());
 		}
 		Rate currentRate = rateInfoService.getRate(currentMemberRate.getRate_idx());
@@ -84,7 +83,8 @@ public class RateService {
 		mrate.setRank(grade);
 		mrate.setName(assignRate.getName());
 		mrate.setRatepoint(currentRateHistory.getCurrentamount());
-
+		mrate.setGraderank(
+				rateMapper.selectRankgradeByGroup(assignRate.getIdx(), currentRateHistory.getCurrentamount()) + 1);
 		return mrate;
 	}
 

@@ -139,5 +139,24 @@
 			AND RATE_IDX = #{rate_idx}
 		</if>
 	</select>
-	
+	<select id="selectRankgradeByGroup" parameterType="Long" resultType="Integer">
+		<![CDATA[
+			SELECT COUNT(1)
+			FROM MEMBERRATE MBR, RATEHISTORY RH
+			WHERE 
+				MBR.IDX IN (
+				    SELECT MAX(MB.IDX)
+				    FROM MEMBERRATE MB
+				    WHERE MB.RATE_IDX = #{rate_idx}
+				    GROUP BY MB.MEMBER_IDX
+				)
+				AND MBR.MEMBER_IDX = RH.MEMBER_IDX
+				AND RH.IDX IN 
+				(
+					SELECT MAX(IDX) FROM RATEHISTORY
+					WHERE CURRENTAMOUNT > #{ratepoint}
+					GROUP BY MEMBER_IDX
+				)
+		]]>
+	</select>
 </mapper>
