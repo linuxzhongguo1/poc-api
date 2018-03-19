@@ -249,6 +249,8 @@ public class RateService {
 	 */
 	public double getRewardMtp(long member_idx, TemporalPlayData playdata) {
 		
+		
+		
 		return 0;
 	}
 
