@@ -12,16 +12,22 @@ import org.springframework.transaction.annotation.Transactional;
 import io.mithril.vo.mtp.MtpHistory;
 import io.mithril.vo.mtp.MtpSource;
 import io.mithril.vo.mtp.MtpTotal;
+import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithrilcoin.api.biz.mtp.mapper.MtpMapper;
+import io.mithrilcoin.api.biz.rate.service.RateService;
 import io.mithrilcoin.api.util.DateUtil;
 
 @Service
 public class MtpService {
+
 	@Autowired
 	private MtpMapper mtpMapper;
 
 	@Autowired
 	private DateUtil datetutil;
+	
+	@Autowired
+	private RateService rateservice;
 
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
 	public MtpHistory insertMtp(MtpHistory mtpHistory) {
@@ -91,7 +97,7 @@ public class MtpService {
 	 */
 	@CacheEvict(value = "MTPCache", key = "#member_idx")
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public MtpHistory insertDataReward(long member_idx, long playdata_idx) {
+	public MtpHistory insertDataReward(long member_idx, long playdata_idx, TemporalPlayData playdata) {
 		// 가입 보상 100포인트 지급
 		MtpSource source = new MtpSource();
 		// 가입 보상 기준
@@ -106,7 +112,9 @@ public class MtpService {
 		// amount 계산 식 추가.
 		// 계산 변수 가져오기 from cache
 		// mtphistory.setAmount(source.getAmount());
-
+		double rewardPoint = rateservice.getRewardMtp(member_idx, playdata);
+		mtphistory.setAmount(rewardPoint);
+		
 		mtphistory.setMtpsource_idx(source.getIdx());
 		mtphistory.setTypecode("T002001");
 		mtphistory.setPlaydata_idx(playdata_idx);

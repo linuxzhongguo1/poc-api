@@ -8,6 +8,8 @@ import org.springframework.stereotype.Repository;
 import io.mithril.vo.rate.Memberrate;
 import io.mithril.vo.rate.Rate;
 import io.mithril.vo.rate.Ratehistory;
+import io.mithril.vo.rate.Rateproperty;
+import io.mithril.vo.rate.Ratevariable;
 
 @Repository
 public interface RateMapper {
@@ -31,4 +33,8 @@ public interface RateMapper {
 	public long selectRankgrade(long amount);
 	
 	public int selectRankgradeByGroup(@Param("rate_idx")long rate_idx, @Param("ratepoint")long ratepoint);
+	
+	public ArrayList<Rateproperty> selectRateproperty();
+	
+	public ArrayList<Ratevariable> selectRatevariable();
 }

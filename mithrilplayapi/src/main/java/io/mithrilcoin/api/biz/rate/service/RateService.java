@@ -1,11 +1,13 @@
 package io.mithrilcoin.api.biz.rate.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.mithril.vo.member.Member;
+import io.mithril.vo.playdata.TemporalPlayData;
 import io.mithril.vo.rate.MemberRating;
 import io.mithril.vo.rate.Memberrate;
 import io.mithril.vo.rate.Rate;
@@ -76,16 +78,26 @@ public class RateService {
 					mtpservice.insertUpgradeReward(member.getIdx(), assignRate.getReward());
 				}
 				currentMemberRate = insertMemberrate(assignRate, member.getIdx());
+				long oldPoint = currentRateHistory == null ? 0 : currentRateHistory.getCurrentamount();
 				// rating 포인트 부여
-				currentRateHistory = insertRateHistory(assignRate.getRpreward(), "R002001", 0, member.getIdx());
+				currentRateHistory = insertRateHistory(assignRate.getRpreward(), "R002001", oldPoint,
+						member.getIdx());
 			}
 		}
-		mrate.setRank(grade);
+		mrate.setRank(grade + 1);
 		mrate.setName(assignRate.getName());
 		mrate.setRatepoint(currentRateHistory.getCurrentamount());
 		mrate.setGraderank(
 				rateMapper.selectRankgradeByGroup(assignRate.getIdx(), currentRateHistory.getCurrentamount()) + 1);
 		return mrate;
+	}
+
+	public Ratehistory selectLastRatehistoryByMemberIdx(long member_idx) {
+		Ratehistory currentRateHistory = rateMapper.selectLastRatehistoryByMemberIdx(member_idx);
+		if (currentRateHistory == null) {
+			return new Ratehistory();
+		}
+		return currentRateHistory;
 	}
 
 	private Memberrate insertMemberrate(Rate rate, long member_idx) {
@@ -98,8 +110,17 @@ public class RateService {
 		return memberRate;
 	}
 
+	/**
+	 * 
+	 * @param rpPoint
+	 * @param statecode
+	 *            R002001 레이팅포인트 추가, R002002 레이팅 포인트 차감
+	 * @param oldAmount
+	 * @param member_idx
+	 * @return
+	 */
 	@Transactional(propagation = Propagation.REQUIRED, rollbackFor = { Exception.class })
-	public Ratehistory insertRateHistory(int rpPoint, String statecode, int oldAmount, long member_idx) {
+	public Ratehistory insertRateHistory(long rpPoint, String statecode, long oldAmount, long member_idx) {
 		Ratehistory rh = new Ratehistory();
 		rh.setAmount(rpPoint);
 		rh.setMember_idx(member_idx);
@@ -218,6 +239,17 @@ public class RateService {
 		long longper = (long) rate;
 
 		return longper;
+	}
+	
+	/**
+	 * 게임 데이터와 사용자 정보를 기준으로 제공할 MTP 포인트를 상계 
+	 * @param member_idx
+	 * @param playdata
+	 * @return
+	 */
+	public double getRewardMtp(long member_idx, TemporalPlayData playdata) {
+		
+		return 0;
 	}
 
 }

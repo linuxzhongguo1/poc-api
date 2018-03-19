@@ -262,7 +262,8 @@ public class MemberService {
 			member.setState("M001003");
 			member.setModifydate(now);
 			memberMapper.updateMember(member);
-			mtpService.insertInviteReward(memberdetail.getMember_idx());
+			//삭제됨. 등급 조정으로 얻음.
+			//mtpService.insertInviteReward(memberdetail.getMember_idx());
 			
 //			//가입 보상 100포인트 지급 
 //			MtpSource source = new MtpSource();

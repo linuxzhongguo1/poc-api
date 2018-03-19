@@ -24,9 +24,11 @@ import io.mithril.vo.playdata.PlayData;
 import io.mithril.vo.playdata.Playhistory;
 import io.mithril.vo.playdata.Playstoreappinfo;
 import io.mithril.vo.playdata.TemporalPlayData;
+import io.mithril.vo.rate.Ratehistory;
 import io.mithrilcoin.api.biz.gamedata.mapper.GamedataMapper;
 import io.mithrilcoin.api.biz.member.mapper.MemberMapper;
 import io.mithrilcoin.api.biz.mtp.service.MtpService;
+import io.mithrilcoin.api.biz.rate.service.RateService;
 import io.mithrilcoin.api.common.redis.RedisDataRepository;
 import io.mithrilcoin.api.util.CollectionUtil;
 import io.mithrilcoin.api.util.DateUtil;
@@ -34,8 +36,9 @@ import io.mithrilcoin.api.util.DateUtil;
 @Service
 public class GamedataService {
 
-	public static final long VALID_PLAY_TIME = 60000;
-	private static final int ONEDAY_MAX_REWARD = 3;
+	public static final long VALID_PLAY_TIME = 180000;
+	private static final int ONEDAY_MAX_REWARD = 5;
+	private static final long GAMEPLAY_RP = 10;
 
 	@Autowired
 	private RedisDataRepository<String, Playstoreappinfo> playstoreRepo;
@@ -54,6 +57,9 @@ public class GamedataService {
 
 	@Autowired
 	private CollectionUtil collectionUtil;
+	
+	@Autowired
+	private RateService rateService;
 
 	@PostConstruct
 	public void init() {
@@ -331,12 +337,15 @@ public class GamedataService {
 				if (data.getPackagename().equals(playdata.getPackagename()) && data.getIdx() == playdata.getIdx()
 						&& "P001001".equals(data.getState())) {
 					// 리워드 주고
-					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx());
+					MtpHistory history = mtpService.insertDataReward(member_idx, data.getIdx(), playdata);
 					data.setAlttitle(playdata.getAlttitle());
 					data.setPlaytime(rewardtime);
 					updatePlayData(data, member_idx, userEmail, history);
 					playdata.setReward(history.getAmount());
 					playdata.setState("P001002");
+					
+					Ratehistory currentRateHistory = rateService.selectLastRatehistoryByMemberIdx(member_idx);
+					rateService.insertRateHistory(GAMEPLAY_RP, "R002001", currentRateHistory.getCurrentamount(), member_idx);
 
 				} else {
 					playdata.setState(data.getState());
