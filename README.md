@@ -1,7 +1,6 @@
-# Mithrilplayapi
-Mithril Play API Server for POC
+# api for PLACTAL poc
 
->Mithril Play API server Environment
+>API server Environment
 
 * JDK 1.8
 * Spring framework 4.X 
@@ -21,7 +20,7 @@ API for temporary game play data process. Validate data and Reward MTP
 
 * MTP API 
 
-API for Mithril point management 
+API for PLACTAL point management 
 
 * Message API 
 
